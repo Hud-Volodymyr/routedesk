@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: routedesk
+      POSTGRES_PASSWORD: routedesk
+      POSTGRES_DB: routedesk
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U routedesk"]
+      interval: 5s
+      retries: 10
+volumes:
+  pgdata:
