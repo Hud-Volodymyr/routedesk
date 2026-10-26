@@ -3,7 +3,7 @@ import type { HealthStatus } from '@routedesk/shared'
 
 @Controller('health')
 export class HealthController {
-  @Get('/')
+  @Get()
   checkHealth(): HealthStatus {
     return {
       status: 'ok'
