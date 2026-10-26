@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "docker compose up -d --wait && pnpm --filter @routedesk/shared build && pnpm --filter @routedesk/api start:dev",
     "lint": "oxlint --type-aware",
     "format": "prettier --write .",
     "test": "pnpm -r test"
