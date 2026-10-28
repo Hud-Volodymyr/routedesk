@@ -5,6 +5,302 @@
   ],
   "tables": [
     {
+      "name": "depots",
+      "schema": "public",
+      "columns": {
+        "address": {
+          "name": "address",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "location": {
+          "name": "location",
+          "type": "geography(point,4326)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "unknown"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "location"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "depots_location_gix",
+          "primary": false,
+          "unique": false,
+          "type": "gist"
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "depots_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "triggers": [],
+      "foreignKeys": {
+        "depots_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "depots_tenant_id_foreign",
+          "localTableName": "public.depots",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "drivers",
+      "schema": "public",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "user_id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "drivers_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "triggers": [],
+      "foreignKeys": {
+        "drivers_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "drivers_tenant_id_foreign",
+          "localTableName": "public.drivers",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        },
+        "drivers_user_id_foreign": {
+          "columnNames": [
+            "user_id"
+          ],
+          "constraintName": "drivers_user_id_foreign",
+          "localTableName": "public.drivers",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        }
+      },
+      "comment": null
+    },
+    {
       "name": "orders",
       "schema": "public",
       "columns": {
@@ -166,7 +462,8 @@
         {
           "name": "orders_check",
           "expression": "size > 0",
-          "definition": "check (size > 0)"
+          "definition": "CHECK ((size > 0))",
+          "columnName": "size"
         }
       ],
       "triggers": [],
@@ -192,6 +489,920 @@
             "id"
           ],
           "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "route_job_unassigned",
+      "schema": "public",
+      "columns": {
+        "job_id": {
+          "name": "job_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [
+            "no_zone",
+            "no_vehicle",
+            "over_capacity"
+          ],
+          "mappedType": "enum"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "job_id",
+            "order_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "route_job_unassigned_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "route_job_unassigned_reason_check",
+          "expression": "\"reason\" in ('no_zone', 'no_vehicle', 'over_capacity')",
+          "definition": "check (\"reason\" in ('no_zone', 'no_vehicle', 'over_capacity'))",
+          "columnName": "reason"
+        }
+      ],
+      "triggers": [],
+      "foreignKeys": {
+        "route_job_unassigned_job_id_foreign": {
+          "columnNames": [
+            "job_id"
+          ],
+          "constraintName": "route_job_unassigned_job_id_foreign",
+          "localTableName": "public.route_job_unassigned",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.route_jobs",
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        },
+        "route_job_unassigned_order_id_foreign": {
+          "columnNames": [
+            "order_id"
+          ],
+          "constraintName": "route_job_unassigned_order_id_foreign",
+          "localTableName": "public.route_job_unassigned",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.orders",
+          "updateRule": "cascade",
+          "deleteRule": "cascade"
+        },
+        "route_job_unassigned_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "route_job_unassigned_tenant_id_foreign",
+          "localTableName": "public.route_job_unassigned",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "route_jobs",
+      "schema": "public",
+      "columns": {
+        "attempts": {
+          "name": "attempts",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "0",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "delivery_date": {
+          "name": "delivery_date",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "date"
+        },
+        "depot_id": {
+          "name": "depot_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "is_current": {
+          "name": "is_current",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "false",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "boolean"
+        },
+        "requested_by": {
+          "name": "requested_by",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'queued'",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "tenant_id",
+            "depot_id",
+            "delivery_date"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "route_jobs_one_active_idx",
+          "primary": false,
+          "unique": true,
+          "where": "status = ANY (ARRAY['queued'::text, 'running'::text])"
+        },
+        {
+          "columnNames": [
+            "tenant_id",
+            "depot_id",
+            "delivery_date"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "route_jobs_one_current_idx",
+          "primary": false,
+          "unique": true,
+          "where": "is_current"
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "route_jobs_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "route_jobs_current_is_done",
+          "expression": "(NOT is_current) OR (status = 'done'::text)",
+          "definition": "CHECK (((NOT is_current) OR (status = 'done'::text)))",
+          "columnName": "is_current"
+        }
+      ],
+      "triggers": [],
+      "foreignKeys": {
+        "route_jobs_depot_id_foreign": {
+          "columnNames": [
+            "depot_id"
+          ],
+          "constraintName": "route_jobs_depot_id_foreign",
+          "localTableName": "public.route_jobs",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.depots"
+        },
+        "route_jobs_requested_by_foreign": {
+          "columnNames": [
+            "requested_by"
+          ],
+          "constraintName": "route_jobs_requested_by_foreign",
+          "localTableName": "public.route_jobs",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users"
+        },
+        "route_jobs_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "route_jobs_tenant_id_foreign",
+          "localTableName": "public.route_jobs",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "route_stops",
+      "schema": "public",
+      "columns": {
+        "distance_from_prev_m": {
+          "name": "distance_from_prev_m",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "double"
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "route_id": {
+          "name": "route_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "seq": {
+          "name": "seq",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "trip": {
+          "name": "trip",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "route_id",
+            "seq"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "route_stops_pkey",
+          "primary": true,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "route_id",
+            "order_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "route_stops_route_id_order_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "tenant_id",
+            "order_id"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "route_stops_tenant_id_order_id_index",
+          "primary": false,
+          "unique": false
+        }
+      ],
+      "checks": [
+        {
+          "name": "route_stops_distance_check",
+          "expression": "distance_from_prev_m >= 0",
+          "definition": "CHECK ((distance_from_prev_m >= (0)::double precision))",
+          "columnName": "distance_from_prev_m"
+        },
+        {
+          "name": "route_stops_seq_check",
+          "expression": "seq >= 1",
+          "definition": "CHECK ((seq >= 1))",
+          "columnName": "seq"
+        },
+        {
+          "name": "route_stops_trip_check",
+          "expression": "trip >= 1",
+          "definition": "CHECK ((trip >= 1))",
+          "columnName": "trip"
+        }
+      ],
+      "triggers": [],
+      "foreignKeys": {
+        "route_stops_order_id_foreign": {
+          "columnNames": [
+            "order_id"
+          ],
+          "constraintName": "route_stops_order_id_foreign",
+          "localTableName": "public.route_stops",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.orders"
+        },
+        "route_stops_route_id_foreign": {
+          "columnNames": [
+            "route_id"
+          ],
+          "constraintName": "route_stops_route_id_foreign",
+          "localTableName": "public.route_stops",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.routes",
+          "deleteRule": "cascade"
+        },
+        "route_stops_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "route_stops_tenant_id_foreign",
+          "localTableName": "public.route_stops",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "routes",
+      "schema": "public",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "delivery_date": {
+          "name": "delivery_date",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "date"
+        },
+        "driver_id": {
+          "name": "driver_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "job_id": {
+          "name": "job_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "path": {
+          "name": "path",
+          "type": "geography(linestring,4326)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "unknown"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "total_distance_m": {
+          "name": "total_distance_m",
+          "type": "double precision",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "double"
+        },
+        "vehicle_id": {
+          "name": "vehicle_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "zone_id": {
+          "name": "zone_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "job_id",
+            "vehicle_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "keyName": "routes_job_id_vehicle_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "routes_pkey",
+          "primary": true,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "tenant_id",
+            "driver_id",
+            "delivery_date"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "routes_tenant_id_driver_id_delivery_date_index",
+          "primary": false,
+          "unique": false
+        }
+      ],
+      "checks": [
+        {
+          "name": "routes_total_distance_check",
+          "expression": "total_distance_m >= 0",
+          "definition": "CHECK ((total_distance_m >= (0)::double precision))",
+          "columnName": "total_distance_m"
+        }
+      ],
+      "triggers": [],
+      "foreignKeys": {
+        "routes_driver_id_foreign": {
+          "columnNames": [
+            "driver_id"
+          ],
+          "constraintName": "routes_driver_id_foreign",
+          "localTableName": "public.routes",
+          "referencedColumnNames": [
+            "user_id"
+          ],
+          "referencedTableName": "public.drivers",
+          "deleteRule": "set null"
+        },
+        "routes_job_id_foreign": {
+          "columnNames": [
+            "job_id"
+          ],
+          "constraintName": "routes_job_id_foreign",
+          "localTableName": "public.routes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.route_jobs",
+          "deleteRule": "cascade"
+        },
+        "routes_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "routes_tenant_id_foreign",
+          "localTableName": "public.routes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        },
+        "routes_vehicle_id_foreign": {
+          "columnNames": [
+            "vehicle_id"
+          ],
+          "constraintName": "routes_vehicle_id_foreign",
+          "localTableName": "public.routes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.vehicles"
+        },
+        "routes_zone_id_foreign": {
+          "columnNames": [
+            "zone_id"
+          ],
+          "constraintName": "routes_zone_id_foreign",
+          "localTableName": "public.routes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.zones"
         }
       },
       "comment": null
@@ -431,6 +1642,606 @@
       "checks": [],
       "triggers": [],
       "foreignKeys": {},
+      "comment": null
+    },
+    {
+      "name": "users",
+      "schema": "public",
+      "columns": {
+        "cognito_sub": {
+          "name": "cognito_sub",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "cognito_sub"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "users_cognito_sub_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "users_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "triggers": [],
+      "foreignKeys": {
+        "users_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "users_tenant_id_foreign",
+          "localTableName": "public.users",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "vehicles",
+      "schema": "public",
+      "columns": {
+        "capacity": {
+          "name": "capacity",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "depot_id": {
+          "name": "depot_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "driver_id": {
+          "name": "driver_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "max_trips": {
+          "name": "max_trips",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "1",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "vehicles_pkey",
+          "primary": true,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "tenant_id",
+            "depot_id"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "vehicles_tenant_id_depot_id_index",
+          "primary": false,
+          "unique": false
+        }
+      ],
+      "checks": [
+        {
+          "name": "vehicles_capacity_check",
+          "expression": "capacity > 0",
+          "definition": "CHECK ((capacity > 0))",
+          "columnName": "capacity"
+        },
+        {
+          "name": "vehicles_max_trips_check",
+          "expression": "max_trips >= 1",
+          "definition": "CHECK ((max_trips >= 1))",
+          "columnName": "max_trips"
+        }
+      ],
+      "triggers": [],
+      "foreignKeys": {
+        "vehicles_depot_id_foreign": {
+          "columnNames": [
+            "depot_id"
+          ],
+          "constraintName": "vehicles_depot_id_foreign",
+          "localTableName": "public.vehicles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.depots"
+        },
+        "vehicles_driver_id_foreign": {
+          "columnNames": [
+            "driver_id"
+          ],
+          "constraintName": "vehicles_driver_id_foreign",
+          "localTableName": "public.vehicles",
+          "referencedColumnNames": [
+            "user_id"
+          ],
+          "referencedTableName": "public.drivers",
+          "deleteRule": "set null"
+        },
+        "vehicles_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "vehicles_tenant_id_foreign",
+          "localTableName": "public.vehicles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
+      "comment": null
+    },
+    {
+      "name": "zones",
+      "schema": "public",
+      "columns": {
+        "area": {
+          "name": "area",
+          "type": "geography(polygon,4326)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "unknown"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "depot_id": {
+          "name": "depot_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "gen_random_uuid()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "priority": {
+          "name": "priority",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "0",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "uuid"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": "now()",
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "area"
+          ],
+          "composite": false,
+          "constraint": false,
+          "keyName": "zones_area_gix",
+          "primary": false,
+          "unique": false,
+          "type": "gist"
+        },
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "zones_pkey",
+          "primary": true,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "tenant_id",
+            "depot_id"
+          ],
+          "composite": true,
+          "constraint": false,
+          "keyName": "zones_tenant_id_depot_id_index",
+          "primary": false,
+          "unique": false
+        }
+      ],
+      "checks": [],
+      "triggers": [],
+      "foreignKeys": {
+        "zones_depot_id_foreign": {
+          "columnNames": [
+            "depot_id"
+          ],
+          "constraintName": "zones_depot_id_foreign",
+          "localTableName": "public.zones",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.depots"
+        },
+        "zones_tenant_id_foreign": {
+          "columnNames": [
+            "tenant_id"
+          ],
+          "constraintName": "zones_tenant_id_foreign",
+          "localTableName": "public.zones",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.tenants"
+        }
+      },
       "comment": null
     }
   ],
