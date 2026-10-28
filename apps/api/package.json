@@ -7,7 +7,10 @@
   "license": "UNLICENSED",
   "type": "module",
   "mikro-orm": {
-    "configPaths": ["./src/mikro-orm.config.ts", "./dist/mikro-orm.config.js"]
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   },
   "scripts": {
     "build": "nest build",
@@ -24,6 +27,7 @@
   },
   "dependencies": {
     "@mikro-orm/core": "^7.2.5",
+    "@mikro-orm/decorators": "^7.2.5",
     "@mikro-orm/migrations": "^7.2.5",
     "@mikro-orm/nestjs": "^7.1.0",
     "@mikro-orm/postgresql": "^7.2.5",
