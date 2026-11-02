@@ -80,7 +80,7 @@ All tenants share one set of tables, and every tenant-owned table has a `tenant_
 - PostgreSQL row-level security (planned) makes the database itself hide and reject other tenants' rows.
 - Tests prove that a user from tenant A gets `404` for tenant B's resources.
 
-Schema-per-tenant and composite tenant foreign keys were considered and rejected; the reasons are in the [decisions log](docs/decisions.md).
+Schema-per-tenant and composite tenant foreign keys were considered and rejected;
 
 ## Tech stack
 
@@ -109,7 +109,6 @@ packages/
   shared/       Types shared by the API and the worker: GeoJSON shapes, job statuses, queue messages
 infra/          AWS CDK app (planned)
 docs/
-  decisions.md  Decisions log: what was decided, the alternatives, and why
 ```
 
 ## Data model

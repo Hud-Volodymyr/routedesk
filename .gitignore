@@ -5,3 +5,5 @@ coverage/
 *.log
 cdk.out/
 .DS_Store
+docs/decisions.md
+CLAUDE.local.md

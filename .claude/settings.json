@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm lint)",
+      "Bash(pnpm -r build)",
+      "Bash(pnpm --filter @routedesk/api test)",
+      "Bash(pnpm --filter @routedesk/api test:e2e)",
+      "Bash(pnpm --filter @routedesk/api build)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(pnpm --filter @routedesk/api orm migration:*)",
+      "Bash(pnpm seed)",
+      "Bash(docker compose down *)"
+    ],
+    "deny": [
+      "Bash(aws *)",
+      "Bash(cdk deploy *)",
+      "Bash(cdk destroy *)",
+      "Bash(pnpm cdk deploy *)",
+      "Bash(pnpm cdk destroy *)",
+      "Bash(pnpm --filter @routedesk/api orm schema:*)",
+      "Read(./apps/api/.env)",
+      "Read(./**/.env)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.claude/settings.local.json)",
+      "Edit(/.claude/CLAUDE.md)",
+      "Edit(/.claude/rules/**)"
+    ]
+  }
+}
