@@ -214,6 +214,9 @@ importers:
       '@routedesk/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      kysely:
+        specifier: 0.29.6
+        version: 0.29.6
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
