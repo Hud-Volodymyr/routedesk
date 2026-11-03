@@ -1,5 +1,9 @@
 import { Type } from '@mikro-orm/core';
-import type { GeoJsonLineString, GeoJsonPoint, GeoJsonPolygon } from '@routedesk/shared';
+import type {
+  GeoJsonLineString,
+  GeoJsonPoint,
+  GeoJsonPolygon,
+} from '@routedesk/shared';
 
 /**
  * Maps a GeoJSON value in code to a geography column in Postgres (SRID 4326).

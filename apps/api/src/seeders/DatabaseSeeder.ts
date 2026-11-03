@@ -31,13 +31,27 @@ export const SEED_DELIVERY_DATE = '2026-11-02';
 
 // Rough land boundaries, drawn with a margin from the river. [longitude, latitude].
 const KYIV_RIGHT_BANK: Position[] = [
-  [30.3, 50.36], [30.55, 50.36], [30.52, 50.44], [30.49, 50.52], [30.3, 50.52], [30.3, 50.36],
+  [30.3, 50.36],
+  [30.55, 50.36],
+  [30.52, 50.44],
+  [30.49, 50.52],
+  [30.3, 50.52],
+  [30.3, 50.36],
 ];
 const KYIV_LEFT_BANK: Position[] = [
-  [30.62, 50.37], [30.8, 50.37], [30.8, 50.5], [30.59, 50.5], [30.61, 50.44], [30.62, 50.37],
+  [30.62, 50.37],
+  [30.8, 50.37],
+  [30.8, 50.5],
+  [30.59, 50.5],
+  [30.61, 50.44],
+  [30.62, 50.37],
 ];
 const LVIV_AREA: Position[] = [
-  [23.95, 49.8], [24.1, 49.8], [24.1, 49.88], [23.95, 49.88], [23.95, 49.8],
+  [23.95, 49.8],
+  [24.1, 49.8],
+  [24.1, 49.88],
+  [23.95, 49.88],
+  [23.95, 49.8],
 ];
 
 export class DatabaseSeeder extends Seeder {
@@ -61,7 +75,7 @@ export class DatabaseSeeder extends Seeder {
   private seedKyiv(em: EntityManager): void {
     const tenant = em.create(Tenant, { name: 'Kyiv Distribution' });
     createUser(em, tenant, 'kyiv-admin', 'Administrator');
- 
+
     const right = em.create(Depot, {
       tenant,
       name: 'Sviatoshyn Depot',
@@ -74,20 +88,55 @@ export class DatabaseSeeder extends Seeder {
       address: faker.location.streetAddress(),
       location: point(30.66, 50.43),
     });
- 
+
     createUser(em, tenant, 'kyiv-dispatcher-right', 'Sviatoshyn Dispatcher');
     createUser(em, tenant, 'kyiv-dispatcher-left', 'Darnytsia Dispatcher');
- 
+
     // Right bank: north and south halves, leaving the strip west of 30.33 uncovered,
     // plus a centre zone that overlaps both and wins by priority.
-    createZone(em, tenant, right, 'Right Bank North', box(30.33, 50.46, 30.52, 50.52), 0);
-    createZone(em, tenant, right, 'Right Bank South', box(30.33, 50.36, 30.55, 50.46), 0);
-    createZone(em, tenant, right, 'City Centre', box(30.44, 50.42, 30.52, 50.48), 10);
- 
+    createZone(
+      em,
+      tenant,
+      right,
+      'Right Bank North',
+      box(30.33, 50.46, 30.52, 50.52),
+      0,
+    );
+    createZone(
+      em,
+      tenant,
+      right,
+      'Right Bank South',
+      box(30.33, 50.36, 30.55, 50.46),
+      0,
+    );
+    createZone(
+      em,
+      tenant,
+      right,
+      'City Centre',
+      box(30.44, 50.42, 30.52, 50.48),
+      10,
+    );
+
     // Left bank: north and south, leaving the strip east of 30.77 in the south uncovered.
-    createZone(em, tenant, left, 'Left Bank North', box(30.59, 50.44, 30.8, 50.5), 0);
-    createZone(em, tenant, left, 'Left Bank South', box(30.61, 50.37, 30.77, 50.44), 0);
- 
+    createZone(
+      em,
+      tenant,
+      left,
+      'Left Bank North',
+      box(30.59, 50.44, 30.8, 50.5),
+      0,
+    );
+    createZone(
+      em,
+      tenant,
+      left,
+      'Left Bank South',
+      box(30.61, 50.37, 30.77, 50.44),
+      0,
+    );
+
     // Capacities and reloads per vehicle. The last vehicle of each depot has no driver.
     const fleet = [
       { capacity: 80, maxTrips: 1 },
@@ -96,7 +145,10 @@ export class DatabaseSeeder extends Seeder {
       { capacity: 120, maxTrips: 1 },
       { capacity: 200, maxTrips: 2 },
     ];
-    for (const [depot, key] of [[right, 'right'], [left, 'left']] as const) {
+    for (const [depot, key] of [
+      [right, 'right'],
+      [left, 'left'],
+    ] as const) {
       fleet.forEach((spec, i) => {
         const hasDriver = i < fleet.length - 1;
         const driver = hasDriver
@@ -112,17 +164,22 @@ export class DatabaseSeeder extends Seeder {
         });
       });
     }
- 
+
     const stores = [
       ...createStores(em, tenant, KYIV_RIGHT_BANK, 100),
       ...createStores(em, tenant, KYIV_LEFT_BANK, 100),
     ];
     createOrders(em, tenant, stores);
- 
+
     // Larger than any vehicle's capacity, so planning must report it as over_capacity.
     const firstStore = stores[0];
     if (firstStore) {
-      em.create(Order, { tenant, store: firstStore, deliveryDate: SEED_DELIVERY_DATE, size: 250 });
+      em.create(Order, {
+        tenant,
+        store: firstStore,
+        deliveryDate: SEED_DELIVERY_DATE,
+        size: 250,
+      });
     }
   }
 
@@ -130,7 +187,7 @@ export class DatabaseSeeder extends Seeder {
     const tenant = em.create(Tenant, { name: 'Lviv Supply' });
     createUser(em, tenant, 'lviv-admin', 'Administrator');
     createUser(em, tenant, 'lviv-dispatcher', 'Dispatcher');
- 
+
     const depot = em.create(Depot, {
       tenant,
       name: 'Lviv Depot',
@@ -138,7 +195,7 @@ export class DatabaseSeeder extends Seeder {
       location: point(24.03, 49.84),
     });
     createZone(em, tenant, depot, 'Lviv', polygon(LVIV_AREA), 0);
- 
+
     for (let i = 1; i <= 2; i++) {
       em.create(Vehicle, {
         tenant,
@@ -148,7 +205,7 @@ export class DatabaseSeeder extends Seeder {
         capacity: 100,
       });
     }
- 
+
     const stores = createStores(em, tenant, LVIV_AREA, 15);
     createOrders(em, tenant, stores);
   }
@@ -159,7 +216,12 @@ export class DatabaseSeeder extends Seeder {
 // ---------------------------------------------------------------
 
 // cognitoSub is a placeholder
-function createUser(em: EntityManager, tenant: Tenant, key: string, name: string): User {
+function createUser(
+  em: EntityManager,
+  tenant: Tenant,
+  key: string,
+  name: string,
+): User {
   return em.create(User, {
     tenant,
     cognitoSub: `seed-${key}`,
@@ -184,7 +246,12 @@ function createZone(
   return em.create(Zone, { tenant, depot, name, area, priority });
 }
 
-function createStores(em: EntityManager, tenant: Tenant, area: Position[], count: number): Store[] {
+function createStores(
+  em: EntityManager,
+  tenant: Tenant,
+  area: Position[],
+  count: number,
+): Store[] {
   return Array.from({ length: count }, () =>
     em.create(Store, {
       tenant,
@@ -196,7 +263,11 @@ function createStores(em: EntityManager, tenant: Tenant, area: Position[], count
 }
 
 // Most stores get one order, some get two, some none. Sizes are in the same unit as capacity.
-function createOrders(em: EntityManager, tenant: Tenant, stores: Store[]): void {
+function createOrders(
+  em: EntityManager,
+  tenant: Tenant,
+  stores: Store[],
+): void {
   for (const store of stores) {
     const count = faker.helpers.weightedArrayElement([
       { value: 0, weight: 25 },
@@ -227,9 +298,18 @@ function polygon(ring: Position[]): GeoJsonPolygon {
 }
 
 // An axis-aligned rectangle as a closed polygon ring.
-function box(west: number, south: number, east: number, north: number): GeoJsonPolygon {
+function box(
+  west: number,
+  south: number,
+  east: number,
+  north: number,
+): GeoJsonPolygon {
   return polygon([
-    [west, south], [east, south], [east, north], [west, north], [west, south],
+    [west, south],
+    [east, south],
+    [east, north],
+    [west, north],
+    [west, south],
   ]);
 }
 
@@ -246,8 +326,16 @@ function randomPointIn(ring: Position[]): GeoJsonPoint {
 
   while (true) {
     const candidate: Position = [
-      faker.number.float({ min: bounds.west, max: bounds.east, fractionDigits: 6 }),
-      faker.number.float({ min: bounds.south, max: bounds.north, fractionDigits: 6 }),
+      faker.number.float({
+        min: bounds.west,
+        max: bounds.east,
+        fractionDigits: 6,
+      }),
+      faker.number.float({
+        min: bounds.south,
+        max: bounds.north,
+        fractionDigits: 6,
+      }),
     ];
     if (isInside(candidate, ring)) {
       return { type: 'Point', coordinates: candidate };
@@ -265,7 +353,8 @@ function isInside([x, y]: Position, ring: Position[]): boolean {
     if (!a || !b) continue;
     const [xi, yi] = a;
     const [xj, yj] = b;
-    const crosses = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    const crosses =
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
     if (crosses) inside = !inside;
   }
   return inside;

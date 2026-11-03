@@ -1,5 +1,12 @@
 import type { Opt } from '@mikro-orm/core';
-import { Check, Entity, Index, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import {
+  Check,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 import { Depot } from '../depots/depot.entity.js';
 import { Driver } from '../drivers/driver.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
@@ -35,7 +42,11 @@ export class Vehicle {
   @Property({ type: 'integer', default: 1 })
   maxTrips!: Opt<number>;
 
-  @Property({ type: 'datetime', columnType: 'timestamptz', defaultRaw: 'now()' })
+  @Property({
+    type: 'datetime',
+    columnType: 'timestamptz',
+    defaultRaw: 'now()',
+  })
   createdAt!: Opt<Date>;
 
   @Property({

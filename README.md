@@ -61,13 +61,13 @@ flowchart LR
 
 **Infrastructure** (AWS CDK v2, TypeScript), split into stacks:
 
-| Stack | Contents |
-|---|---|
-| Network | VPC, public subnets for Fargate tasks, isolated subnets for the database, security groups. No NAT Gateway, to keep costs near zero. |
-| Data | RDS PostgreSQL with PostGIS, credentials in Secrets Manager |
-| Auth | Cognito user pool, groups for roles, a custom `tenant_id` attribute |
-| Messaging | SQS queue with a dead-letter queue |
-| App | ECS cluster, API and worker services, Application Load Balancer, log groups |
+| Stack     | Contents                                                                                                                            |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Network   | VPC, public subnets for Fargate tasks, isolated subnets for the database, security groups. No NAT Gateway, to keep costs near zero. |
+| Data      | RDS PostgreSQL with PostGIS, credentials in Secrets Manager                                                                         |
+| Auth      | Cognito user pool, groups for roles, a custom `tenant_id` attribute                                                                 |
+| Messaging | SQS queue with a dead-letter queue                                                                                                  |
+| App       | ECS cluster, API and worker services, Application Load Balancer, log groups                                                         |
 
 **CI/CD** (GitHub Actions): on every pull request, lint, build, tests and `cdk diff`. On merge to `main`, build the images, push them to ECR, run migrations, then deploy. GitHub authenticates to AWS with OIDC and a narrowly scoped IAM role, so no long-lived access keys are stored anywhere.
 
@@ -84,20 +84,20 @@ Schema-per-tenant and composite tenant foreign keys were considered and rejected
 
 ## Tech stack
 
-| Area | Choice |
-|---|---|
-| Runtime | Node.js 24, TypeScript in strict mode, native ES modules |
-| API | NestJS |
-| Database | PostgreSQL 16 + PostGIS 3, `geography` columns in SRID 4326 with GiST indexes |
-| Data access | MikroORM 7 with decorator entities; Kysely (through MikroORM) for PostGIS queries |
-| Migrations | Versioned MikroORM migrations, run in CI before deploy |
-| Auth | Amazon Cognito; JWTs verified in the API with `aws-jwt-verify` |
-| Async work | Amazon SQS and a worker process, with a dead-letter queue |
-| Infrastructure | AWS CDK v2 (TypeScript) |
-| Compute | ECS Fargate behind an Application Load Balancer |
-| Observability | CloudWatch logs, metrics and alarms (API 5xx rate, DLQ depth) |
-| Tests | Vitest and Supertest; integration tests against a real PostGIS container with Testcontainers |
-| Tooling | pnpm workspaces, oxlint (type-aware), Prettier, GitHub Actions |
+| Area           | Choice                                                                                       |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| Runtime        | Node.js 24, TypeScript in strict mode, native ES modules                                     |
+| API            | NestJS                                                                                       |
+| Database       | PostgreSQL 16 + PostGIS 3, `geography` columns in SRID 4326 with GiST indexes                |
+| Data access    | MikroORM 7 with decorator entities; Kysely (through MikroORM) for PostGIS queries            |
+| Migrations     | Versioned MikroORM migrations, run in CI before deploy                                       |
+| Auth           | Amazon Cognito; JWTs verified in the API with `aws-jwt-verify`                               |
+| Async work     | Amazon SQS and a worker process, with a dead-letter queue                                    |
+| Infrastructure | AWS CDK v2 (TypeScript)                                                                      |
+| Compute        | ECS Fargate behind an Application Load Balancer                                              |
+| Observability  | CloudWatch logs, metrics and alarms (API 5xx rate, DLQ depth)                                |
+| Tests          | Vitest and Supertest; integration tests against a real PostGIS container with Testcontainers |
+| Tooling        | pnpm workspaces, oxlint (type-aware), Prettier, GitHub Actions                               |
 
 ## Repository layout
 
@@ -113,19 +113,19 @@ docs/
 
 ## Data model
 
-| Table | Purpose |
-|---|---|
-| `tenants` | Distributors |
-| `users` | Every user of every role. Roles live in Cognito groups, not in the database. |
-| `drivers` | 1:1 extension of `users` for drivers; vehicles and routes reference it |
-| `depots`, `stores` | Locations as `geography(Point, 4326)` |
-| `zones` | Delivery areas as `geography(Polygon, 4326)`, with a priority for overlaps |
-| `vehicles` | Capacity, home depot, assigned driver, and the number of trips allowed per day |
-| `orders` | Store, delivery date and size |
-| `route_jobs` | Planning requests: status, depot, date, and whether the plan is current |
-| `routes` | One vehicle's day for a job: path as `geography(LineString, 4326)` and total distance |
-| `route_stops` | Ordered stops of a route, grouped into trips |
-| `route_job_unassigned` | Orders a job couldn't place, with the reason |
+| Table                  | Purpose                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------- |
+| `tenants`              | Distributors                                                                          |
+| `users`                | Every user of every role. Roles live in Cognito groups, not in the database.          |
+| `drivers`              | 1:1 extension of `users` for drivers; vehicles and routes reference it                |
+| `depots`, `stores`     | Locations as `geography(Point, 4326)`                                                 |
+| `zones`                | Delivery areas as `geography(Polygon, 4326)`, with a priority for overlaps            |
+| `vehicles`             | Capacity, home depot, assigned driver, and the number of trips allowed per day        |
+| `orders`               | Store, delivery date and size                                                         |
+| `route_jobs`           | Planning requests: status, depot, date, and whether the plan is current               |
+| `routes`               | One vehicle's day for a job: path as `geography(LineString, 4326)` and total distance |
+| `route_stops`          | Ordered stops of a route, grouped into trips                                          |
+| `route_job_unassigned` | Orders a job couldn't place, with the reason                                          |
 
 ## Running locally
 

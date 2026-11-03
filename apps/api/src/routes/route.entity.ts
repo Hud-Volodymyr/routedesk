@@ -21,7 +21,10 @@ import { Zone } from '../zones/zone.entity.js';
 @Entity({ tableName: 'routes' })
 @Unique({ properties: ['job', 'vehicle'] })
 @Index({ properties: ['tenant', 'driver', 'deliveryDate'] })
-@Check({ name: 'routes_total_distance_check', expression: 'total_distance_m >= 0' })
+@Check({
+  name: 'routes_total_distance_check',
+  expression: 'total_distance_m >= 0',
+})
 export class Route {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id!: Opt<string>;
@@ -52,6 +55,10 @@ export class Route {
   @Property({ type: 'double', columnType: 'double precision' })
   totalDistanceM!: number;
 
-  @Property({ type: 'datetime', columnType: 'timestamptz', defaultRaw: 'now()' })
+  @Property({
+    type: 'datetime',
+    columnType: 'timestamptz',
+    defaultRaw: 'now()',
+  })
   createdAt!: Opt<Date>;
 }

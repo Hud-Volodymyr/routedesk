@@ -2,7 +2,10 @@ import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { createTestApp } from './helpers/test-app.js';
-import { startTestDatabase, type TestDatabase } from './helpers/test-database.js';
+import {
+  startTestDatabase,
+  type TestDatabase,
+} from './helpers/test-database.js';
 
 describe('HealthController (e2e)', () => {
   let db: TestDatabase;

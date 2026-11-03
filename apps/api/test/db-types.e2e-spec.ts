@@ -2,7 +2,10 @@ import { execFile } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { promisify } from 'node:util';
-import { startTestDatabase, type TestDatabase } from './helpers/test-database.js';
+import {
+  startTestDatabase,
+  type TestDatabase,
+} from './helpers/test-database.js';
 
 const execFileAsync = promisify(execFile);
 const apiRoot = resolve(import.meta.dirname, '..');

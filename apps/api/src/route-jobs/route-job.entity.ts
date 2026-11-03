@@ -1,6 +1,13 @@
 import type { RouteJobStatus } from '@routedesk/shared';
 import type { Opt } from '@mikro-orm/core';
-import { Check, Entity, Index, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import {
+  Check,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 import { Depot } from '../depots/depot.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { User } from '../users/user.entity.js';
@@ -9,7 +16,10 @@ import { User } from '../users/user.entity.js';
 // Each depot is planned independently, so dispatchers of different depots never block each other
 @Entity({ tableName: 'route_jobs' })
 // Only a finished job can be the live plan.
-@Check({ name: 'route_jobs_current_is_done', expression: `not is_current or status = 'done'` })
+@Check({
+  name: 'route_jobs_current_is_done',
+  expression: `not is_current or status = 'done'`,
+})
 // At most one queued or running job per depot and date (two dispatchers clicking "plan" at once)
 @Index({
   name: 'route_jobs_one_active_idx',
@@ -50,7 +60,11 @@ export class RouteJob {
   @Property({ type: 'boolean', default: false })
   isCurrent!: Opt<boolean>;
 
-  @Property({ type: 'datetime', columnType: 'timestamptz', defaultRaw: 'now()' })
+  @Property({
+    type: 'datetime',
+    columnType: 'timestamptz',
+    defaultRaw: 'now()',
+  })
   createdAt!: Opt<Date>;
 
   @Property({ type: 'datetime', columnType: 'timestamptz', nullable: true })

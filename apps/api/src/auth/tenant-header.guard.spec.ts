@@ -34,7 +34,9 @@ describe('TenantHeaderGuard', () => {
   const guard = new TenantHeaderGuard(new Reflector());
 
   it('accepts a UUID header and stores it on the request', () => {
-    const { context, request } = contextFor(PrivateController, { 'x-tenant-id': TENANT_ID });
+    const { context, request } = contextFor(PrivateController, {
+      'x-tenant-id': TENANT_ID,
+    });
 
     expect(guard.canActivate(context)).toBe(true);
     expect(request.tenantId).toBe(TENANT_ID);
@@ -47,7 +49,9 @@ describe('TenantHeaderGuard', () => {
   });
 
   it('rejects a header that is not a UUID', () => {
-    const { context } = contextFor(PrivateController, { 'x-tenant-id': 'kyiv' });
+    const { context } = contextFor(PrivateController, {
+      'x-tenant-id': 'kyiv',
+    });
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });

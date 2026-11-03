@@ -6,7 +6,9 @@ import type { App } from 'supertest/types.js';
 import { AppModule } from '../../src/app.module.js';
 import type { TestDatabase } from './test-database.js';
 
-export async function createTestApp(db: TestDatabase): Promise<INestApplication<App>> {
+export async function createTestApp(
+  db: TestDatabase,
+): Promise<INestApplication<App>> {
   const moduleFixture = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(MikroORM)
     .useValue(db.orm)
