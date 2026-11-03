@@ -1,6 +1,5 @@
-import { defineConfig } from "@mikro-orm/core";
 import { Migrator } from "@mikro-orm/migrations";
-import { PostgreSqlDriver } from "@mikro-orm/postgresql";
+import { defineConfig, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Tenant } from "./tenants/tenant.entity.js";

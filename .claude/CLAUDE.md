@@ -28,6 +28,8 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 - Code shared by API and worker goes in `packages/shared`.
 - Coordinates: GeoJSON `[lng, lat]`, SRID 4326.
 - Schema changes only through migrations. Never run `orm schema:*`.
+- Kysely queries: `em.getKysely<DB>()` with `DB` from `apps/api/src/common/db/db.generated.ts`. Never edit the generated file.
+
 
 ## Tenant isolation
 

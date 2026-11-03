@@ -16,6 +16,7 @@ export type TestOrm = Awaited<ReturnType<typeof initOrm>>;
 
 export interface TestDatabase {
   orm: TestOrm;
+  url: string;
   stop(): Promise<void>;
 }
 
@@ -24,13 +25,15 @@ export async function startTestDatabase(): Promise<TestDatabase> {
     'postgis/postgis:16-3.4',
   ).start();
 
-  const orm = await initOrm(container.getConnectionUri());
+  const url = container.getConnectionUri();
+  const orm = await initOrm(url);
 
   await orm.migrator.up();
   await orm.seeder.seed(DatabaseSeeder);
 
   return {
     orm,
+    url,
     async stop() {
       await orm.close(true);
       await container.stop();

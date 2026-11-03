@@ -1,0 +1,17 @@
+{
+  "dialect": "postgres",
+  "outFile": "./src/common/db/db.generated.ts",
+  "includePattern": "public.*",
+  "excludePattern": "public.+(mikro_orm_migrations|spatial_ref_sys|geography_columns|geometry_columns)",
+  "overrides": {
+    "columns": {
+      "depots.location": "Geography",
+      "routes.path": "Geography",
+      "stores.location": "Geography",
+      "zones.area": "Geography"
+    }
+  },
+  "customImports": {
+    "Geography": "./geography.js"
+  }
+}

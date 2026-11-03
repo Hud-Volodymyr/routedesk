@@ -23,7 +23,9 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
-    "orm": "mikro-orm"
+    "orm": "mikro-orm",
+    "db:types": "kysely-codegen",
+    "db:types:check": "kysely-codegen --verify"
   },
   "dependencies": {
     "@mikro-orm/core": "^7.2.5",

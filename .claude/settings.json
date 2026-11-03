@@ -9,7 +9,9 @@
       "Bash(pnpm --filter @routedesk/api build)",
       "Bash(git status)",
       "Bash(git diff *)",
-      "Bash(git log *)"
+      "Bash(git log *)",
+      "Bash(pnpm --filter @routedesk/api db:types:check)",
+      "Bash(pnpm --filter @routedesk/api db:types)"
     ],
     "ask": [
       "Bash(git commit *)",
