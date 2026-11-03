@@ -30,7 +30,6 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 - Schema changes only through migrations. Never run `orm schema:*`.
 - Kysely queries: `em.getKysely<DB>()` with `DB` from `apps/api/src/common/db/db.generated.ts`. Never edit the generated file.
 
-
 ## Tenant isolation
 
 - Tenant comes from the verified JWT (temporarily: `X-Tenant-Id` header), never from the body.

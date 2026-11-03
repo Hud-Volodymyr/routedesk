@@ -11,7 +11,8 @@
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(pnpm --filter @routedesk/api db:types:check)",
-      "Bash(pnpm --filter @routedesk/api db:types)"
+      "Bash(pnpm --filter @routedesk/api db:types)",
+      "Bash(pnpm typecheck)"
     ],
     "ask": [
       "Bash(git commit *)",
