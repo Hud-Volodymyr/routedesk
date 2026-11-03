@@ -15,6 +15,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      - run: pnpm typecheck
       - run: pnpm -r build
       - run: pnpm --filter @routedesk/api test
       - run: pnpm --filter @routedesk/api test:e2e
