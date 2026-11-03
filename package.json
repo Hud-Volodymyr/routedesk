@@ -9,7 +9,15 @@
     "typecheck": "pnpm --filter @routedesk/shared build && pnpm -r typecheck",
     "format": "prettier --write .",
     "test": "pnpm -r test",
-    "seed": "pnpm --filter @routedesk/api orm seeder:run"
+    "seed": "pnpm --filter @routedesk/api orm seeder:run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "oxlint --type-aware --fix",
+      "prettier --write"
+    ],
+    "*.{js,json,md,yml}": "prettier --write"
   },
   "keywords": [],
   "author": "",
