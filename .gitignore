@@ -6,4 +6,6 @@ coverage/
 cdk.out/
 .DS_Store
 docs/decisions.md
+docs/plan.md
 CLAUDE.local.md
+*.tsbuildinfo

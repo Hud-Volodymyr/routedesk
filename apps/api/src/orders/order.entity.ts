@@ -6,7 +6,6 @@ import {
   ManyToOne,
   PrimaryKey,
   Property,
-  Unique,
 } from '@mikro-orm/decorators/legacy';
 import { Store } from '../stores/store.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';

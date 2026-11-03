@@ -1,6 +1,5 @@
 import { defineConfig } from "@mikro-orm/core";
 import { Migrator } from "@mikro-orm/migrations";
-import { SeedManager } from '@mikro-orm/seeder';
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -29,7 +28,7 @@ export default defineConfig({
     Tenant, Store, Order, User, Vehicle, Driver, RouteJob, Route, RouteStop,
     Depot, RouteJobUnassigned, Zone
   ],
-  extensions: [Migrator, SeedManager],
+  extensions: [Migrator],
   migrations: {
     path: 'dist/migrations',
     pathTs: 'src/migrations',

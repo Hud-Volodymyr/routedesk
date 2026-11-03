@@ -1,31 +1,27 @@
-import type { INestApplication } from "@nestjs/common"
-import { Test, TestingModule } from "@nestjs/testing";
+import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import type { App } from "supertest/types.js"
-import { HealthModule } from "../src/health/health.module.js";
-
+import type { App } from 'supertest/types.js';
+import { createTestApp } from './helpers/test-app.js';
+import { startTestDatabase, type TestDatabase } from './helpers/test-database.js';
 
 describe('HealthController (e2e)', () => {
+  let db: TestDatabase;
   let app: INestApplication<App>;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [HealthModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  it('/ (GET)', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/health')
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ status: 'ok' })
-  });
+    db = await startTestDatabase();
+    app = await createTestApp(db);
+  }, 120_000);
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
+    await db?.stop();
   });
-})
+
+  it('/health (GET)', async () => {
+    const response = await request(app.getHttpServer()).get('/health');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ status: 'ok' });
+  });
+});

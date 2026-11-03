@@ -22,6 +22,7 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 ## Conventions
 
 - English everywhere.
+- No code comments from Claude. If one seems necessary, suggest it in chat with file, line and text; I decide.
 - Relative imports end in `.js`. Type-only imports use `import type`.
 - pnpm only; `pnpm dlx`, not `npx`.
 - Code shared by API and worker goes in `packages/shared`.
@@ -57,3 +58,9 @@ Suggest changes to `.claude/CLAUDE.md` or `.claude/rules/` in chat, as a diff, w
 - A rule is outdated or contradicts the code or another rule → flag it.
 
 Tables of contents only for long reference files read on demand, not for rules.
+
+## Git
+
+- One branch per milestone or feature, from an up-to-date `main`: `feat/…`, `chore/…`, `fix/…`. Merge through a PR with CI green. Never commit to `main`.
+- At the start of a milestone, Claude proposes the branch before any change.
+- Commit each finished step before starting the next. Dependency changes get their own commit.

@@ -9,7 +9,7 @@ import { Tenant } from '../src/tenants/tenant.entity.js';
 import { User } from '../src/users/user.entity.js';
 import { Vehicle } from '../src/vehicles/vehicle.entity.js';
 import { Zone } from '../src/zones/zone.entity.js';
-import { startTestDatabase, type TestDatabase } from './test-database.js';
+import { startTestDatabase, type TestDatabase } from './helpers/test-database.js';
 
 describe('Database (integration)', () => {
   let db: TestDatabase;

@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/postgresql';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import config from '../src/mikro-orm.config.js';
-import { DatabaseSeeder } from '../src/seeders/DatabaseSeeder.js';
+import config from '../../src/mikro-orm.config.js';
+import { DatabaseSeeder } from '../../src/seeders/DatabaseSeeder.js';
 
 function initOrm(clientUrl: string) {
   return MikroORM.init({

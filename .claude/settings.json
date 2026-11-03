@@ -32,5 +32,6 @@
       "Edit(/.claude/CLAUDE.md)",
       "Edit(/.claude/rules/**)"
     ]
-  }
+  },
+  "showThinkingSummaries": true
 }
