@@ -18,5 +18,6 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm -r build
       - run: pnpm --filter @routedesk/api test
+      - run: pnpm --filter @routedesk/api test:spec
       - run: pnpm --filter @routedesk/api test:int
       - run: pnpm --filter @routedesk/api test:e2e
