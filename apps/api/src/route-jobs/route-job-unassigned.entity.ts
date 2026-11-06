@@ -1,6 +1,11 @@
 import type { UnassignedReason } from '@routedesk/shared';
 import { PrimaryKeyProp } from '@mikro-orm/core';
-import { Check, Entity, ManyToOne, Property } from '@mikro-orm/decorators/legacy';
+import {
+  Check,
+  Entity,
+  ManyToOne,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 import { Order } from '../orders/order.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { RouteJob } from './route-job.entity.js';

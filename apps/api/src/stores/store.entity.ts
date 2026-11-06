@@ -1,16 +1,24 @@
-
-import type { Opt } from '@mikro-orm/core';
-import { Entity, Index, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import { EntityRepositoryType, type Opt } from '@mikro-orm/core';
+import {
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/decorators/legacy';
 import { Tenant } from '../tenants/tenant.entity.js';
 import type { GeoJsonPoint } from '@routedesk/shared';
 import { PointType } from '../common/geo/geography.type.js';
- 
-@Entity({ tableName: 'stores' })
+import { StoreRepository } from './store.repository.js';
+
+@Entity({ tableName: 'stores', repository: () => StoreRepository })
 @Index({ name: 'stores_location_gix', properties: ['location'], type: 'gist' })
 export class Store {
+  [EntityRepositoryType]?: StoreRepository;
+
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id!: Opt<string>;
- 
+
   @Property({ type: 'text' })
   name!: string;
 
@@ -19,11 +27,20 @@ export class Store {
 
   @Property({ type: PointType })
   location!: GeoJsonPoint;
- 
-  @Property({ type: 'datetime', columnType: 'timestamptz', defaultRaw: 'now()' })
+
+  @Property({
+    type: 'datetime',
+    columnType: 'timestamptz',
+    defaultRaw: 'now()',
+  })
   createdAt!: Opt<Date>;
 
-  @Property({ type: 'datetime', columnType: 'timestamptz', defaultRaw: 'now()', onUpdate: () => new Date() })
+  @Property({
+    type: 'datetime',
+    columnType: 'timestamptz',
+    defaultRaw: 'now()',
+    onUpdate: () => new Date(),
+  })
   updatedAt!: Opt<Date>;
 
   @ManyToOne(() => Tenant)

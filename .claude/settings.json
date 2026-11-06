@@ -6,10 +6,16 @@
       "Bash(pnpm -r build)",
       "Bash(pnpm --filter @routedesk/api test)",
       "Bash(pnpm --filter @routedesk/api test:e2e)",
+      "Bash(pnpm --filter @routedesk/api test:int)",
+      "Bash(pnpm --filter @routedesk/api test:spec)",
       "Bash(pnpm --filter @routedesk/api build)",
       "Bash(git status)",
       "Bash(git diff *)",
-      "Bash(git log *)"
+      "Bash(git log *)",
+      "Bash(pnpm --filter @routedesk/api db:types:check)",
+      "Bash(pnpm --filter @routedesk/api db:types)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm --filter @routedesk/api db:explain)"
     ],
     "ask": [
       "Bash(git commit *)",
@@ -32,5 +38,6 @@
       "Edit(/.claude/CLAUDE.md)",
       "Edit(/.claude/rules/**)"
     ]
-  }
+  },
+  "showThinkingSummaries": true
 }

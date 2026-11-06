@@ -18,15 +18,21 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 - `pnpm --filter @routedesk/api test:e2e` — integration, needs Docker
 - `pnpm --filter @routedesk/api orm <cmd>` — MikroORM CLI
 - `pnpm seed` — reset local data
+- `pnpm --filter @routedesk/api test:int` — integration (database, no HTTP), needs Docker
+- `pnpm --filter @routedesk/api test:e2e` — end-to-end over HTTP, needs Docker
+- `pnpm --filter @routedesk/api test:spec` — every spec requirement has a test, every test has a known ID
+- `pnpm --filter @routedesk/api db:explain` — query plans of the repository queries on the dev database (read-only)
 
 ## Conventions
 
 - English everywhere.
+- No code comments from Claude. If one seems necessary, suggest it in chat with file, line and text; I decide.
 - Relative imports end in `.js`. Type-only imports use `import type`.
 - pnpm only; `pnpm dlx`, not `npx`.
 - Code shared by API and worker goes in `packages/shared`.
 - Coordinates: GeoJSON `[lng, lat]`, SRID 4326.
 - Schema changes only through migrations. Never run `orm schema:*`.
+- Kysely queries: `em.getKysely<DB>()` with `DB` from `apps/api/src/common/db/db.generated.ts`. Never edit the generated file.
 
 ## Tenant isolation
 
@@ -57,3 +63,10 @@ Suggest changes to `.claude/CLAUDE.md` or `.claude/rules/` in chat, as a diff, w
 - A rule is outdated or contradicts the code or another rule → flag it.
 
 Tables of contents only for long reference files read on demand, not for rules.
+
+## Git
+
+- One branch per milestone or feature, from an up-to-date `main`: `feat/…`, `chore/…`, `fix/…`. Merge through a PR with CI green. Never commit to `main`.
+- At the start of a milestone, Claude proposes the branch before any change.
+- Commit each finished step before starting the next. Dependency changes get their own commit.
+- Commits run lint-staged (oxlint `--fix`, Prettier) on staged files; pushes run `pnpm typecheck`.

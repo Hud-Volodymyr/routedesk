@@ -1,0 +1,3 @@
+apps/api/src/common/db/db.generated.ts
+apps/api/src/migrations/
+pnpm-lock.yaml

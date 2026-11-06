@@ -19,7 +19,10 @@ import { Route } from './route.entity.js';
 @Index({ properties: ['tenant', 'order'] })
 @Check({ name: 'route_stops_seq_check', expression: 'seq >= 1' })
 @Check({ name: 'route_stops_trip_check', expression: 'trip >= 1' })
-@Check({ name: 'route_stops_distance_check', expression: 'distance_from_prev_m >= 0' })
+@Check({
+  name: 'route_stops_distance_check',
+  expression: 'distance_from_prev_m >= 0',
+})
 export class RouteStop {
   // Composite primary key: a route can't have two stops with the same position
   [PrimaryKeyProp]?: ['route', 'seq'];

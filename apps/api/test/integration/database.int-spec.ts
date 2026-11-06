@@ -1,15 +1,18 @@
 import type { GeoJsonPoint } from '@routedesk/shared';
-import { Depot } from '../src/depots/depot.entity.js';
-import { Order } from '../src/orders/order.entity.js';
-import { RouteJob } from '../src/route-jobs/route-job.entity.js';
-import { Route } from '../src/routes/route.entity.js';
-import { SEED_DELIVERY_DATE } from '../src/seeders/DatabaseSeeder.js';
-import { Store } from '../src/stores/store.entity.js';
-import { Tenant } from '../src/tenants/tenant.entity.js';
-import { User } from '../src/users/user.entity.js';
-import { Vehicle } from '../src/vehicles/vehicle.entity.js';
-import { Zone } from '../src/zones/zone.entity.js';
-import { startTestDatabase, type TestDatabase } from './test-database.js';
+import { Depot } from '../../src/depots/depot.entity.js';
+import { Order } from '../../src/orders/order.entity.js';
+import { RouteJob } from '../../src/route-jobs/route-job.entity.js';
+import { Route } from '../../src/routes/route.entity.js';
+import { SEED_DELIVERY_DATE } from '../../src/seeders/DatabaseSeeder.js';
+import { Store } from '../../src/stores/store.entity.js';
+import { Tenant } from '../../src/tenants/tenant.entity.js';
+import { User } from '../../src/users/user.entity.js';
+import { Vehicle } from '../../src/vehicles/vehicle.entity.js';
+import { Zone } from '../../src/zones/zone.entity.js';
+import {
+  startTestDatabase,
+  type TestDatabase,
+} from '../helpers/test-database.js';
 
 describe('Database (integration)', () => {
   let db: TestDatabase;
@@ -36,7 +39,9 @@ describe('Database (integration)', () => {
     const em = db.orm.em.fork();
 
     const order = await em.findOne(Order, { size: 250 });
-    const vehiclesThatFit = await em.count(Vehicle, { capacity: { $gte: 250 } });
+    const vehiclesThatFit = await em.count(Vehicle, {
+      capacity: { $gte: 250 },
+    });
 
     expect(order).not.toBeNull();
     expect(vehiclesThatFit).toBe(0);
@@ -45,9 +50,16 @@ describe('Database (integration)', () => {
   it('returns a store location exactly as it was saved', async () => {
     const em = db.orm.em.fork();
     const tenant = await em.findOneOrFail(Tenant, { name: 'Lviv Supply' });
-    const location: GeoJsonPoint = { type: 'Point', coordinates: [24.031111, 49.842222] };
+    const location: GeoJsonPoint = {
+      type: 'Point',
+      coordinates: [24.031111, 49.842222],
+    };
 
-    const store = em.create(Store, { tenant, name: 'Round-trip store', location });
+    const store = em.create(Store, {
+      tenant,
+      name: 'Round-trip store',
+      location,
+    });
     await em.flush();
     em.clear();
 
@@ -57,8 +69,13 @@ describe('Database (integration)', () => {
 
   it('saves a changed location on flush', async () => {
     const em = db.orm.em.fork();
-    const store = await em.findOneOrFail(Store, { tenant: { name: 'Kyiv Distribution' } });
-    const newLocation: GeoJsonPoint = { type: 'Point', coordinates: [30.5234, 50.4501] };
+    const store = await em.findOneOrFail(Store, {
+      tenant: { name: 'Kyiv Distribution' },
+    });
+    const newLocation: GeoJsonPoint = {
+      type: 'Point',
+      coordinates: [30.5234, 50.4501],
+    };
 
     store.location = newLocation;
     await em.flush();
@@ -74,7 +91,9 @@ describe('Database (integration)', () => {
     const depot = await em.findOneOrFail(Depot, { tenant });
     const vehicle = await em.findOneOrFail(Vehicle, { depot });
     const zone = await em.findOneOrFail(Zone, { depot });
-    const dispatcher = await em.findOneOrFail(User, { cognitoSub: 'seed-lviv-dispatcher' });
+    const dispatcher = await em.findOneOrFail(User, {
+      cognitoSub: 'seed-lviv-dispatcher',
+    });
 
     const job = em.create(RouteJob, {
       tenant,
@@ -91,7 +110,11 @@ describe('Database (integration)', () => {
       deliveryDate: SEED_DELIVERY_DATE,
       path: {
         type: 'LineString',
-        coordinates: [depot.location.coordinates, [24.05, 49.85], depot.location.coordinates],
+        coordinates: [
+          depot.location.coordinates,
+          [24.05, 49.85],
+          depot.location.coordinates,
+        ],
       },
       totalDistanceM: 1234.5,
     });
