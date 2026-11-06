@@ -6,7 +6,7 @@ A distributor (a tenant) delivers goods from its depots to stores. Dispatchers m
 
 This is a portfolio project. Its goal is to show how a small SaaS backend is designed and run end to end on AWS: multi-tenant data isolation, geospatial queries in PostGIS, Cognito authentication, asynchronous work over SQS, infrastructure as code with the AWS CDK, and CI/CD with GitHub Actions. Route optimization is deliberately simple. A clear heuristic with known limits matters more here than an optimal solver.
 
-> **Status:** in progress. The repository setup, database schema, migrations and seed data are done. The geo API is next. See the [roadmap](#roadmap).
+> **Status:** in progress. The repository setup, database schema and geo API are done. Authentication and tenant isolation are next. See the [roadmap](#roadmap).
 
 ## Features
 
@@ -147,20 +147,30 @@ The API listens on `http://localhost:3000`, and `GET /health` returns `{ "status
 
 The seed data is deterministic: a Kyiv distributor with one depot on each bank of the Dnipro, 200 stores, overlapping zones, vehicles with different capacities and reload limits, and orders for a fixed date. A small second tenant in Lviv exists for isolation tests. The data includes deliberate edge cases, such as stores outside every zone and an order too large for any vehicle.
 
+Until authentication arrives, requests name their tenant in an `X-Tenant-Id` header. Get the seeded Kyiv tenant's ID from the `tenants` table, then:
+
+```bash
+curl -H "X-Tenant-Id: <tenant-id>" "http://localhost:3000/stores/within?lng=30.52&lat=50.45&radiusKm=5"
+```
+
 **Checks:**
 
 ```bash
 pnpm lint
+pnpm typecheck
 pnpm -r build
-pnpm --filter @routedesk/api test       # unit tests
-pnpm --filter @routedesk/api test:e2e   # integration tests; starts a PostGIS container, needs Docker
+pnpm --filter @routedesk/api test         # unit tests
+pnpm --filter @routedesk/api test:spec    # every spec requirement has a test
+pnpm --filter @routedesk/api test:int     # repository and database tests; starts PostGIS containers, needs Docker
+pnpm --filter @routedesk/api test:e2e     # HTTP tests through the full app; needs Docker
+pnpm --filter @routedesk/api db:explain   # query plans on the seeded dev database (read-only)
 ```
 
 ## Roadmap
 
 - [x] **Project setup:** pnpm workspaces, strict TypeScript, linting, Docker Compose with PostGIS, health endpoint, CI on every pull request
 - [x] **Database schema:** all tables, geography columns, GiST indexes, seed data, database integration tests
-- [ ] **Geo queries:** radius search, nearest stores, zone lookup; `EXPLAIN ANALYZE` to prove index use
+- [x] **Geo queries:** radius search, nearest stores, zone lookup; `EXPLAIN ANALYZE` to prove index use
 - [ ] **Authentication and tenant isolation:** JWT guard, roles, tenant scoping, row-level security, cross-tenant tests
 - [ ] **Route planning:** SQS, worker, idempotency, retries, dead-letter queue
 - [ ] **AWS infrastructure:** network, data, auth, messaging and app stacks
@@ -176,3 +186,5 @@ These are deliberate, to keep the scope of a portfolio project manageable:
 - **No time model.** There are no shift lengths, drive times or delivery windows; a per-vehicle trip limit stands in for the length of a working day.
 - **Straight-line distances.** The heuristic uses PostGIS distances, not road distances. In Kyiv, two stores on opposite banks of the Dnipro look close even though the drive crosses a bridge.
 - **Role changes apply on token refresh.** Roles come from Cognito groups inside the JWT, so removing a role takes effect when the user's token expires.
+- **Temporary: tenant from an untrusted header.** Until Cognito arrives, any client can claim any tenant through `X-Tenant-Id`. Local development only; never deploy this state.
+- **Tenant isn't part of the spatial indexes.** Spatial indexes find every tenant's rows in an area, and other tenants' rows are filtered out afterwards. That costs nothing while tenants are in different cities; tenants sharing a city would need a combined `(tenant_id, location)` index.
