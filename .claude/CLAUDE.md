@@ -18,6 +18,10 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 - `pnpm --filter @routedesk/api test:e2e` — integration, needs Docker
 - `pnpm --filter @routedesk/api orm <cmd>` — MikroORM CLI
 - `pnpm seed` — reset local data
+- `pnpm --filter @routedesk/api test:int` — integration (database, no HTTP), needs Docker
+- `pnpm --filter @routedesk/api test:e2e` — end-to-end over HTTP, needs Docker
+- `pnpm --filter @routedesk/api test:spec` — every spec requirement has a test, every test has a known ID
+- `pnpm --filter @routedesk/api db:explain` — query plans of the repository queries on the dev database (read-only)
 
 ## Conventions
 
@@ -65,3 +69,4 @@ Tables of contents only for long reference files read on demand, not for rules.
 - One branch per milestone or feature, from an up-to-date `main`: `feat/…`, `chore/…`, `fix/…`. Merge through a PR with CI green. Never commit to `main`.
 - At the start of a milestone, Claude proposes the branch before any change.
 - Commit each finished step before starting the next. Dependency changes get their own commit.
+- Commits run lint-staged (oxlint `--fix`, Prettier) on staged files; pushes run `pnpm typecheck`.
