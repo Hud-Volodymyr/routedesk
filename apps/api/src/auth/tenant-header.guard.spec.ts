@@ -1,65 +1,121 @@
-import { UnauthorizedException, type ExecutionContext } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
+import { HttpException, type ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Public } from './public.decorator.js';
 import { TenantHeaderGuard } from './tenant-header.guard.js';
-import type { TenantRequest } from './tenant-request.js';
 
-const TENANT_ID = '6f1c2b0a-3d4e-4f5a-8b6c-7d8e9f0a1b2c';
-
-class PrivateController {
-  handle(): void {}
+class ProtectedController {
+  handle(this: void): void {}
 }
 
 @Public()
 class PublicController {
-  handle(): void {}
+  handle(this: void): void {}
 }
 
+class MixedController {
+  @Public()
+  open(this: void): void {}
+
+  closed(this: void): void {}
+}
+
+type Handler = () => void;
+
 function contextFor(
-  controller: typeof PrivateController | typeof PublicController,
+  controller: new () => object,
+  handler: Handler,
   headers: Record<string, string>,
-): { context: ExecutionContext; request: TenantRequest } {
-  const request = {
-    header: (name: string) => headers[name.toLowerCase()],
-  } as TenantRequest;
-  const context = {
-    getHandler: () => controller.prototype.handle,
+): ExecutionContext {
+  const lowerCased = Object.fromEntries(
+    Object.entries(headers).map(([name, value]) => [name.toLowerCase(), value]),
+  );
+  const lookup = (name: string) => lowerCased[name.toLowerCase()];
+  const request = { headers: lowerCased, header: lookup, get: lookup };
+  return {
+    getHandler: () => handler,
     getClass: () => controller,
-    switchToHttp: () => ({ getRequest: () => request }),
+    getType: () => 'http',
+    getArgs: () => [request],
+    getArgByIndex: (index: number) => [request][index],
+    switchToHttp: () => ({
+      getRequest: () => request,
+      getResponse: () => ({}),
+      getNext: () => () => undefined,
+    }),
   } as unknown as ExecutionContext;
-  return { context, request };
+}
+
+function statusOf(run: () => unknown): number | undefined {
+  try {
+    run();
+  } catch (error) {
+    if (error instanceof HttpException) {
+      return error.getStatus();
+    }
+    throw error;
+  }
+  return undefined;
 }
 
 describe('TenantHeaderGuard', () => {
   const guard = new TenantHeaderGuard(new Reflector());
+  const protectedHandle = ProtectedController.prototype.handle;
 
-  it('accepts a UUID header and stores it on the request', () => {
-    const { context, request } = contextFor(PrivateController, {
-      'x-tenant-id': TENANT_ID,
+  it('TENANT-1: accepts any UUID in X-Tenant-Id', () => {
+    const context = contextFor(ProtectedController, protectedHandle, {
+      'X-Tenant-Id': randomUUID(),
     });
 
     expect(guard.canActivate(context)).toBe(true);
-    expect(request.tenantId).toBe(TENANT_ID);
   });
 
-  it('rejects a missing header', () => {
-    const { context } = contextFor(PrivateController, {});
+  it('TENANT-1: rejects a request without X-Tenant-Id with 401', () => {
+    const context = contextFor(ProtectedController, protectedHandle, {});
 
-    expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
+    expect(statusOf(() => guard.canActivate(context))).toBe(401);
   });
 
-  it('rejects a header that is not a UUID', () => {
-    const { context } = contextFor(PrivateController, {
-      'x-tenant-id': 'kyiv',
+  it.each([
+    'kyiv',
+    `${randomUUID()}0`,
+    randomUUID().replaceAll('-', ''),
+    `{${randomUUID()}}`,
+  ])('TENANT-1: rejects X-Tenant-Id=%j with 401', (value) => {
+    const context = contextFor(ProtectedController, protectedHandle, {
+      'X-Tenant-Id': value,
     });
 
-    expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
+    expect(statusOf(() => guard.canActivate(context))).toBe(401);
   });
 
-  it('lets public routes through without a header', () => {
-    const { context, request } = contextFor(PublicController, {});
+  it('TENANT-2: lets a handler of a @Public() controller through without the header', () => {
+    const context = contextFor(
+      PublicController,
+      PublicController.prototype.handle,
+      {},
+    );
 
     expect(guard.canActivate(context)).toBe(true);
-    expect(request.tenantId).toBeUndefined();
+  });
+
+  it('TENANT-2: lets a @Public() handler through without the header', () => {
+    const context = contextFor(
+      MixedController,
+      MixedController.prototype.open,
+      {},
+    );
+
+    expect(guard.canActivate(context)).toBe(true);
+  });
+
+  it('TENANT-2: still protects the unmarked handlers next to a @Public() one', () => {
+    const context = contextFor(
+      MixedController,
+      MixedController.prototype.closed,
+      {},
+    );
+
+    expect(statusOf(() => guard.canActivate(context))).toBe(401);
   });
 });
