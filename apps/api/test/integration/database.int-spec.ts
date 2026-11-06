@@ -1,18 +1,18 @@
 import type { GeoJsonPoint } from '@routedesk/shared';
-import { Depot } from '../src/depots/depot.entity.js';
-import { Order } from '../src/orders/order.entity.js';
-import { RouteJob } from '../src/route-jobs/route-job.entity.js';
-import { Route } from '../src/routes/route.entity.js';
-import { SEED_DELIVERY_DATE } from '../src/seeders/DatabaseSeeder.js';
-import { Store } from '../src/stores/store.entity.js';
-import { Tenant } from '../src/tenants/tenant.entity.js';
-import { User } from '../src/users/user.entity.js';
-import { Vehicle } from '../src/vehicles/vehicle.entity.js';
-import { Zone } from '../src/zones/zone.entity.js';
+import { Depot } from '../../src/depots/depot.entity.js';
+import { Order } from '../../src/orders/order.entity.js';
+import { RouteJob } from '../../src/route-jobs/route-job.entity.js';
+import { Route } from '../../src/routes/route.entity.js';
+import { SEED_DELIVERY_DATE } from '../../src/seeders/DatabaseSeeder.js';
+import { Store } from '../../src/stores/store.entity.js';
+import { Tenant } from '../../src/tenants/tenant.entity.js';
+import { User } from '../../src/users/user.entity.js';
+import { Vehicle } from '../../src/vehicles/vehicle.entity.js';
+import { Zone } from '../../src/zones/zone.entity.js';
 import {
   startTestDatabase,
   type TestDatabase,
-} from './helpers/test-database.js';
+} from '../helpers/test-database.js';
 
 describe('Database (integration)', () => {
   let db: TestDatabase;
