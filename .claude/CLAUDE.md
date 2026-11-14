@@ -15,7 +15,6 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 - `pnpm dev` — PostGIS + API
 - `pnpm lint`, `pnpm -r build`
 - `pnpm --filter @routedesk/api test` — unit
-- `pnpm --filter @routedesk/api test:e2e` — integration, needs Docker
 - `pnpm --filter @routedesk/api orm <cmd>` — MikroORM CLI
 - `pnpm seed` — reset local data
 - `pnpm --filter @routedesk/api test:int` — integration (database, no HTTP), needs Docker
@@ -36,7 +35,7 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 
 ## Tenant isolation
 
-- Tenant comes from the verified JWT (temporarily: `X-Tenant-Id` header), never from the body.
+- Tenant comes from the verified access token's `tenant_id` claim, never from the body or other headers.
 - Every query filters by tenant, including raw Kysely queries.
 - Load related rows through the `EntityManager`; never `em.getReference()` by bare ID. Foreign keys don't check tenants.
 - One forked `EntityManager` per request, SQS message, and test.

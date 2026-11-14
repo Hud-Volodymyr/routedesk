@@ -22,6 +22,7 @@ You write tests from a specification, not from the code under test.
 
 - Choose the cases yourself: boundaries, empty results, other tenants, ties.
 - Fewest tests that would catch a broken implementation. No case that re-checks what another test or tier already covers.
+- For every test, name the bug in our code that would make it fail. If you can only name a bug in a library or the framework, don't write the test; report the requirement as a spec problem.
 - Choose the tier for each case following `.claude/rules/tests.md`: the cheapest tier that can observe it.
 - Every test title starts with its requirement ID: `it('GEO-1: orders by distance, nearest first')`.
 - Don't open the implementation of the code under test. You may read the interface files named in the prompt, `apps/api/test/helpers/`, existing tests for style, entities for fixture fields, and `.claude/rules/tests.md`.

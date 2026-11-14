@@ -8,10 +8,13 @@ paths:
 
 - Integration tests: `startTestDatabase()` from `apps/api/test/helpers/test-database.ts`, once per file in `beforeAll`.
 - E2e tests create the app with `createTestApp(db)` from `apps/api/test/helpers/test-app.ts`, never `Test.createTestingModule` directly.
+- Setup used by more than one test file (request contexts, token payloads, status helpers, etc) lives in `apps/api/test/helpers/`. Check there before writing a local helper.
 - Fork the `EntityManager` per test.
 - `em.clear()` before reloading anything you assert on.
 - Read-only seed checks before tests that write.
 - Specs live in `docs/specs/<area>.md`: numbered requirements, entry points and fixture facts. No tiers or test cases.
+- Write each requirement as one rule, not a list of examples. Every example in a requirement turns into a test.
+- When a library does a check for us (signatures, expiry, validation), the requirement says what we give the library, not what the library checks.
 - Test titles start with the requirement ID they check.
 - When behaviour changes: update the spec, then run `test-writer` in maintain mode for the changed IDs.
 - New or changed behaviour gets tests from the `test-writer` subagent, given a spec file. Never the implementation.
