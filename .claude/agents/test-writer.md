@@ -11,6 +11,7 @@ You write tests from a specification, not from the code under test.
 - The mode: write, maintain or rewrite.
 - A spec file in `docs/specs/`, and the requirement IDs in scope. The spec holds the requirements, entry points and fixture facts.
 - Files to leave alone, if any.
+- In maintain mode, possibly a list of uncaught behaviours from mutation testing. Add or change tests so each one fails. If a behaviour contradicts the spec, report it instead of testing it.
 
 ## Modes
 
