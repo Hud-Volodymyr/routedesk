@@ -94,6 +94,17 @@ describe('Database (integration)', () => {
     expect(tooHeavy.length).toBeGreaterThan(0);
   });
 
+  it('SEED-2: seeds each tenant with its fixed ID', async () => {
+    const em = db.ownerOrm.em.fork();
+
+    const tenants = await em.findAll(Tenant, { orderBy: { name: 'asc' } });
+
+    expect(tenants.map((t) => ({ name: t.name, id: t.id }))).toEqual([
+      { name: 'Kyiv Distribution', id: 'a1000000-0000-4000-8000-000000000001' },
+      { name: 'Lviv Supply', id: 'a1000000-0000-4000-8000-000000000002' },
+    ]);
+  });
+
   it('TYPES-3: returns Point, LineString and Polygon values equal to the ones saved', async () => {
     const em = db.ownerOrm.em.fork();
     const location: GeoJsonPoint = {

@@ -10,6 +10,7 @@ Checks on the app's wiring and tooling, not on a feature.
 - **TYPES-3** Our entity mappings give back what was saved: the custom geography types (`PointType`, `LineStringType`, `PolygonType`) return a GeoJSON value equal to the one saved, and a changed value is saved on `flush()`.
 - **TYPES-4** The migrated schema matches the entity definitions: generating a migration from the entities against the migrated database produces no changes.
 - **SEED-1** The seed has two tenants: Kyiv Distribution with 200 stores and Lviv Supply with 15, and at least one order heavier than any of its tenant's vehicles can carry.
+- **SEED-2** The seed tenants have the same IDs on every run: Kyiv Distribution `a1000000-0000-4000-8000-000000000001`, Lviv Supply `a1000000-0000-4000-8000-000000000002`.
 
 ## Entry points
 

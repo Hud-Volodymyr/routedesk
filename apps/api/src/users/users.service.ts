@@ -1,6 +1,10 @@
 import { Transactional } from '@mikro-orm/decorators/legacy';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Driver } from '../drivers/driver.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { CognitoUsers } from './cognito-users.js';
@@ -40,6 +44,43 @@ export class UsersService {
       name: input.name,
       role: input.role,
     };
+  }
+
+  async ensureAdmin(
+    tenantId: string,
+    email: string,
+    name: string,
+  ): Promise<CreatedUser> {
+    if (!(await this.tenantExists(tenantId))) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    const existing = await this.cognito.findByEmail(email);
+    if (existing && existing.tenantId !== tenantId) {
+      throw new ConflictException();
+    }
+
+    const sub =
+      existing?.sub ?? (await this.cognito.create(email, tenantId)).sub;
+    const user = await this.ensureDatabaseUser(tenantId, sub, {
+      email,
+      name,
+      role: 'admin',
+    });
+
+    if (!existing?.groups.includes('admin')) {
+      await this.cognito.addToGroup(sub, 'admin');
+    }
+    if (!existing) {
+      await this.cognito.sendInvitation(email);
+    }
+
+    return { id: user.id, email, name, role: 'admin' };
+  }
+
+  @Transactional()
+  private async tenantExists(tenantId: string): Promise<boolean> {
+    return (await this.em.count(Tenant, { id: tenantId })) > 0;
   }
 
   @Transactional()
