@@ -23,7 +23,7 @@ describe('Generated Kysely types (integration)', () => {
   beforeAll(async () => {
     db = await startTestDatabase();
 
-    const rows = await db.orm.em.fork().execute<{ column: string }[]>(
+    const rows = await db.ownerOrm.em.fork().execute<{ column: string }[]>(
       `select table_name || '.' || column_name as column
        from information_schema.columns
        where table_schema = 'public' and udt_name = 'geography'`,

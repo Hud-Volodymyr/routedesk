@@ -14,6 +14,7 @@ import { RouteStop } from './routes/route-stop.entity.js';
 import { Depot } from './depots/depot.entity.js';
 import { RouteJobUnassigned } from './route-jobs/route-job-unassigned.entity.js';
 import { Zone } from './zones/zone.entity.js';
+import { TenantTransactionSubscriber } from './common/db/tenant-transaction.subscriber.js';
 
 const envFile = resolve(import.meta.dirname, '../.env');
 if (existsSync(envFile)) {
@@ -21,7 +22,10 @@ if (existsSync(envFile)) {
 }
 
 export default defineConfig({
-  clientUrl: process.env.DATABASE_URL,
+  clientUrl:
+    process.env.DB_ROLE === 'owner'
+      ? process.env.DATABASE_OWNER_URL
+      : process.env.DATABASE_URL,
   driver: PostgreSqlDriver,
   entities: [
     Tenant,
@@ -38,6 +42,7 @@ export default defineConfig({
     Zone,
   ],
   extensions: [Migrator],
+  subscribers: [new TenantTransactionSubscriber()],
   migrations: {
     path: 'dist/migrations',
     pathTs: 'src/migrations',

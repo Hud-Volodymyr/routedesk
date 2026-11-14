@@ -1,7 +1,9 @@
 import type { GeoJsonPoint } from '@routedesk/shared';
 import { Store } from '../../src/stores/store.entity.js';
 import { Tenant } from '../../src/tenants/tenant.entity.js';
+import type { EntityManager } from '@mikro-orm/postgresql';
 import {
+  inTenant,
   startTestDatabase,
   type TestDatabase,
 } from '../helpers/test-database.js';
@@ -35,7 +37,7 @@ describe('StoreRepository (integration)', () => {
   beforeAll(async () => {
     db = await startTestDatabase();
 
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const tenant = em.create(Tenant, { name: 'Store repository test' });
     const foreign = em.create(Tenant, { name: 'Foreign tenant' });
     const created = [
@@ -58,8 +60,8 @@ describe('StoreRepository (integration)', () => {
     await db?.stop();
   });
 
-  function stores() {
-    return db.orm.em.fork().getRepository(Store);
+  function asTenant<T>(work: (em: EntityManager) => Promise<T>): Promise<T> {
+    return inTenant(db.orm, tenantId, work);
   }
 
   function expected(name: OwnName, distanceM: number) {
@@ -77,7 +79,9 @@ describe('StoreRepository (integration)', () => {
 
   describe('findWithin', () => {
     it('GEO-1: returns the stores within the radius with id, name, GeoJSON location and surface distance in metres, nearest first', async () => {
-      const result = await stores().findWithin(tenantId, CENTRE, 1000);
+      const result = await asTenant((em) =>
+        em.getRepository(Store).findWithin(tenantId, CENTRE, 1000),
+      );
 
       expect(result).toEqual([
         expected('here', 0),
@@ -87,13 +91,17 @@ describe('StoreRepository (integration)', () => {
     });
 
     it('GEO-1: includes a store exactly at the radius, here a zero radius on the store itself', async () => {
-      const result = await stores().findWithin(tenantId, CENTRE, 0);
+      const result = await asTenant((em) =>
+        em.getRepository(Store).findWithin(tenantId, CENTRE, 0),
+      );
 
       expect(result).toEqual([expected('here', 0)]);
     });
 
     it('GEO-1: never returns another tenant store, even at the centre', async () => {
-      const result = await stores().findWithin(tenantId, CENTRE, 200);
+      const result = await asTenant((em) =>
+        em.getRepository(Store).findWithin(tenantId, CENTRE, 200),
+      );
 
       expect(names(result)).toEqual(['here']);
     });
@@ -101,16 +109,18 @@ describe('StoreRepository (integration)', () => {
 
   describe('findNearestToLocation', () => {
     it('GEO-2: returns the k nearest stores by surface distance, nearest first, shaped as in GEO-1', async () => {
-      const result = await stores().findNearestToLocation(tenantId, CENTRE, 2);
+      const result = await asTenant((em) =>
+        em.getRepository(Store).findNearestToLocation(tenantId, CENTRE, 2),
+      );
 
       expect(result).toEqual([expected('here', 0), expected('east', 707)]);
     });
 
     it('GEO-2: never returns another tenant store, even when it is nearest', async () => {
-      const result = await stores().findNearestToLocation(
-        tenantId,
-        at(30.6, 50.601),
-        1,
+      const result = await asTenant((em) =>
+        em
+          .getRepository(Store)
+          .findNearestToLocation(tenantId, at(30.6, 50.601), 1),
       );
 
       expect(result).toEqual([

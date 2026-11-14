@@ -26,8 +26,9 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "test:spec": "node scripts/spec-coverage.ts",
     "db:explain": "tsx scripts/explain.ts",
+    "db:app-password": "DB_ROLE=owner tsx scripts/set-app-password.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "orm": "mikro-orm",
+    "orm": "DB_ROLE=owner mikro-orm",
     "db:types": "kysely-codegen",
     "db:types:check": "kysely-codegen --verify"
   },

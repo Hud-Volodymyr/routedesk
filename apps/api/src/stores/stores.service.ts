@@ -1,3 +1,4 @@
+import { Transactional } from '@mikro-orm/decorators/legacy';
 import { Injectable } from '@nestjs/common';
 import type { GeoJsonPoint } from '@routedesk/shared';
 import type { StoreWithDistance, StoreZone } from './dto/store-responses.js';
@@ -13,7 +14,8 @@ export class StoresService {
     private readonly zones: ZoneRepository,
   ) {}
 
-  findWithin(
+  @Transactional()
+  async findWithin(
     tenantId: string,
     centerpoint: GeoJsonPoint,
     radiusM: number,
@@ -21,6 +23,7 @@ export class StoresService {
     return this.stores.findWithin(tenantId, centerpoint, radiusM);
   }
 
+  @Transactional()
   async findNearestToDepot(
     tenantId: string,
     depotId: string,
@@ -34,6 +37,7 @@ export class StoresService {
     return this.stores.findNearestToLocation(tenantId, depot.location, k);
   }
 
+  @Transactional()
   async findZone(tenantId: string, storeId: string): Promise<StoreZone | null> {
     const store = await this.stores.findOneOrFail({
       id: storeId,

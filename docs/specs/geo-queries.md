@@ -18,7 +18,7 @@ HTTP, all requiring a Cognito access token (`tenant-scoping.md`):
 - `GET /stores/nearest?depotId&k` → `StoreWithDistance[]`
 - `GET /stores/:id/zone` → `StoreZoneResponse`
 
-Repositories, which may be called directly:
+Repositories, which may be called directly inside a tenant transaction (`row-level-security.md`):
 
 ```ts
 // apps/api/src/stores/store.repository.ts

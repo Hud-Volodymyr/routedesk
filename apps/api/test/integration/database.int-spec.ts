@@ -26,7 +26,7 @@ describe('Database (integration)', () => {
   });
 
   it('seeds 200 stores for Kyiv Distribution and 15 for Lviv Supply', async () => {
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
 
     const kyiv = await em.findOneOrFail(Tenant, { name: 'Kyiv Distribution' });
     const lviv = await em.findOneOrFail(Tenant, { name: 'Lviv Supply' });
@@ -36,7 +36,7 @@ describe('Database (integration)', () => {
   });
 
   it('seeds an order larger than any vehicle can carry', async () => {
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
 
     const order = await em.findOne(Order, { size: 250 });
     const vehiclesThatFit = await em.count(Vehicle, {
@@ -48,7 +48,7 @@ describe('Database (integration)', () => {
   });
 
   it('returns a store location exactly as it was saved', async () => {
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const tenant = await em.findOneOrFail(Tenant, { name: 'Lviv Supply' });
     const location: GeoJsonPoint = {
       type: 'Point',
@@ -68,7 +68,7 @@ describe('Database (integration)', () => {
   });
 
   it('saves a changed location on flush', async () => {
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const store = await em.findOneOrFail(Store, {
       tenant: { name: 'Kyiv Distribution' },
     });
@@ -86,7 +86,7 @@ describe('Database (integration)', () => {
   });
 
   it('returns route distances as numbers', async () => {
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const tenant = await em.findOneOrFail(Tenant, { name: 'Lviv Supply' });
     const depot = await em.findOneOrFail(Depot, { tenant });
     const vehicle = await em.findOneOrFail(Vehicle, { depot });

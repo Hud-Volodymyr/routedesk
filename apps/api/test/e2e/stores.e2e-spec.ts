@@ -45,7 +45,7 @@ describe('Stores (e2e)', () => {
     db = await startTestDatabase();
     app = await createTestApp(db);
 
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const kyiv = await em.findOneOrFail(Tenant, { name: 'Kyiv Distribution' });
     const lviv = await em.findOneOrFail(Tenant, { name: 'Lviv Supply' });
     const sviatoshyn = await em.findOneOrFail(Depot, {

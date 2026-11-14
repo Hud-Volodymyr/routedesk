@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "docker compose up -d --wait && pnpm --filter @routedesk/shared build && pnpm --filter @routedesk/api start:dev",
+    "dev": "docker compose up -d --wait && pnpm --filter @routedesk/api db:app-password && pnpm --filter @routedesk/shared build && pnpm --filter @routedesk/api start:dev",
     "lint": "oxlint --type-aware",
     "typecheck": "pnpm --filter @routedesk/shared build && pnpm -r typecheck",
     "format": "prettier --write .",
