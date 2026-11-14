@@ -33,6 +33,7 @@
     "db:types:check": "kysely-codegen --verify"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.1169.0",
     "@mikro-orm/core": "^7.2.5",
     "@mikro-orm/decorators": "^7.2.5",
     "@mikro-orm/migrations": "^7.2.5",
