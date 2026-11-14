@@ -12,7 +12,7 @@ Input limits are in `request-validation.md`, not-found responses in `tenant-scop
 
 ## Entry points
 
-HTTP, all requiring `X-Tenant-Id`:
+HTTP, all requiring a Cognito access token (`tenant-scoping.md`):
 
 - `GET /stores/within?lng&lat&radiusKm` → `StoreWithDistance[]`
 - `GET /stores/nearest?depotId&k` → `StoreWithDistance[]`

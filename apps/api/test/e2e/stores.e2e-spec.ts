@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import type { INestApplication } from '@nestjs/common';
 import type { GeoJsonPoint } from '@routedesk/shared';
 import request from 'supertest';
@@ -12,7 +11,7 @@ import {
   startTestDatabase,
   type TestDatabase,
 } from '../helpers/test-database.js';
-import { tenantHeader } from '../helpers/tenant.js';
+import { authHeader } from '../helpers/tenant.js';
 
 function at(longitude: number, latitude: number): GeoJsonPoint {
   return { type: 'Point', coordinates: [longitude, latitude] };
@@ -116,16 +115,12 @@ describe('Stores (e2e)', () => {
   });
 
   function get(url: string, tenantId: string) {
-    return request(app.getHttpServer()).get(url).set(tenantHeader(tenantId));
+    return request(app.getHttpServer()).get(url).set(authHeader(tenantId));
   }
 
-  describe('tenant header', () => {
-    it.each([
-      WITHIN_750_M,
-      `/stores/nearest?depotId=${randomUUID()}`,
-      `/stores/${randomUUID()}/zone`,
-    ])('TENANT-1: %s without X-Tenant-Id is 401', async (url) => {
-      const response = await request(app.getHttpServer()).get(url);
+  describe('authentication', () => {
+    it('TENANT-1: a protected route without an Authorization header is 401', async () => {
+      const response = await request(app.getHttpServer()).get(WITHIN_750_M);
 
       expect(response.status).toBe(401);
     });

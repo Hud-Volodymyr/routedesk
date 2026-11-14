@@ -4,7 +4,7 @@ Checks on the app's wiring and tooling, not on a feature.
 
 ## Requirements
 
-- **HEALTH-1** `GET /health` returns 200 with `{ "status": "ok" }`, without `X-Tenant-Id`.
+- **HEALTH-1** `GET /health` returns 200 with `{ "status": "ok" }`, without an `Authorization` header.
 - **TYPES-1** The generated Kysely types match the migrated schema exactly.
 - **TYPES-2** Every `geography` column in the `public` schema is typed as `Geography`, and no override names a column that isn't `geography`.
 
