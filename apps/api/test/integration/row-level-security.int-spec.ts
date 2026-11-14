@@ -351,7 +351,7 @@ describe('Row-level security (integration)', () => {
       request.tenantId = tenantId;
       const context = contextFor(ProbeController, probe, request);
       return RequestContext.create(db.orm.em, async () => {
-        const result = await interceptor.intercept(context, {
+        const result = interceptor.intercept(context, {
           handle: () => defer(work),
         });
         return lastValueFrom(result as Observable<T>);
