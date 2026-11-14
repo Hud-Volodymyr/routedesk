@@ -37,6 +37,7 @@ Multi-tenant logistics SaaS backend on AWS. Product and architecture: `README.md
 
 - Tenant comes from the verified access token's `tenant_id` claim, never from the body or other headers.
 - Every query filters by tenant, including raw Kysely queries.
+- Service methods that touch the database are marked `@Transactional()`; outside a transaction, RLS shows no rows.
 - Load related rows through the `EntityManager`; never `em.getReference()` by bare ID. Foreign keys don't check tenants.
 - One forked `EntityManager` per request, SQS message, and test.
 - Inject `EntityManager` from `@mikro-orm/postgresql`.
