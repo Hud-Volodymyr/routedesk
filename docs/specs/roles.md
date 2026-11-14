@@ -6,6 +6,7 @@ Which signed-in users may call a route, from the Cognito groups in their access 
 
 - **ROLE-1** A route not marked `@Public()` is allowed only when the user's groups include at least one role listed by `@Roles(...)`; a handler's `@Roles` replaces its controller's. A route with no `@Roles` on either is denied for everyone. A denied request is 403, and every 403 has the same response.
 - **ROLE-2** The store endpoints (`/stores/*`) allow the roles `admin` and `dispatcher`.
+- **ROLE-3** `POST /users` allows only the role `admin`.
 
 ## Entry points
 
