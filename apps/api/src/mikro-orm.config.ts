@@ -14,7 +14,6 @@ import { RouteStop } from './routes/route-stop.entity.js';
 import { Depot } from './depots/depot.entity.js';
 import { RouteJobUnassigned } from './route-jobs/route-job-unassigned.entity.js';
 import { Zone } from './zones/zone.entity.js';
-import { TenantTransactionSubscriber } from './common/db/tenant-transaction.subscriber.js';
 
 const envFile = resolve(import.meta.dirname, '../.env');
 if (existsSync(envFile)) {
@@ -42,7 +41,6 @@ export default defineConfig({
     Zone,
   ],
   extensions: [Migrator],
-  subscribers: [new TenantTransactionSubscriber()],
   migrations: {
     path: 'dist/migrations',
     pathTs: 'src/migrations',

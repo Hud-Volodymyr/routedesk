@@ -10,8 +10,9 @@ import {
 import { Depot } from '../depots/depot.entity.js';
 import { Driver } from '../drivers/driver.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
-@Entity({ tableName: 'vehicles' })
+@Entity({ tableName: 'vehicles', ...tenantIsolation('tenant_id') })
 @Index({ properties: ['tenant', 'depot'] })
 @Check({ name: 'vehicles_capacity_check', expression: 'capacity > 0' })
 @Check({ name: 'vehicles_max_trips_check', expression: 'max_trips >= 1' })

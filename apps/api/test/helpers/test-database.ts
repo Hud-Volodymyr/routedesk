@@ -3,7 +3,6 @@ import {
   PostgreSqlContainer,
   type StartedPostgreSqlContainer,
 } from '@testcontainers/postgresql';
-import { tenantContext } from '../../src/common/db/tenant-context.js';
 import config from '../../src/mikro-orm.config.js';
 import { setAppRolePassword } from '../../scripts/app-role.js';
 import { DatabaseSeeder } from '../../src/seeders/DatabaseSeeder.js';
@@ -65,7 +64,7 @@ export function inTenant<T>(
   tenantId: string,
   work: (em: EntityManager) => Promise<T>,
 ): Promise<T> {
-  return tenantContext.run(tenantId, () =>
-    orm.em.fork().transactional((em) => work(em as EntityManager)),
-  );
+  const em = orm.em.fork();
+  em.setSessionContext({ variables: { 'app.tenant_id': tenantId } });
+  return em.transactional((tx) => work(tx as EntityManager));
 }

@@ -65,4 +65,12 @@ describe('Generated Kysely types (integration)', () => {
       expect(geographyColumns).toContain(column);
     }
   });
+
+  it('TYPES-4: generating a migration from the entities against the migrated schema produces no changes', async () => {
+    const diff = await db.ownerOrm.schema.getUpdateSchemaMigrationSQL({
+      wrap: false,
+    });
+
+    expect(diff).toEqual({ up: '', down: '' });
+  });
 });

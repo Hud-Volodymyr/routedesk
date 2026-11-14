@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import type { EntityManager } from '@mikro-orm/postgresql';
+import { RequestContext } from '@mikro-orm/core';
+import { Transactional } from '@mikro-orm/decorators/legacy';
+import { EntityManager } from '@mikro-orm/postgresql';
+import { Test } from '@nestjs/testing';
 import type { GeoJsonPoint } from '@routedesk/shared';
-import { tenantContext } from '../../src/common/db/tenant-context.js';
+import { defer, lastValueFrom, type Observable } from 'rxjs';
+import { TenantContextInterceptor } from '../../src/auth/tenant-context.interceptor.js';
+import type { DB } from '../../src/common/db/db.generated.js';
 import { Depot } from '../../src/depots/depot.entity.js';
 import { Driver } from '../../src/drivers/driver.entity.js';
 import { Order } from '../../src/orders/order.entity.js';
@@ -14,6 +19,7 @@ import { Tenant } from '../../src/tenants/tenant.entity.js';
 import { User } from '../../src/users/user.entity.js';
 import { Vehicle } from '../../src/vehicles/vehicle.entity.js';
 import { Zone } from '../../src/zones/zone.entity.js';
+import { contextFor, requestWith } from '../helpers/guard-context.js';
 import {
   inTenant,
   startTestDatabase,
@@ -309,50 +315,96 @@ describe('Row-level security (integration)', () => {
   });
 
   describe('RLS-3', () => {
-    it('RLS-3: a flush in a request context writes as that request tenant', async () => {
-      const names = new Map([
-        [tenantA, 'flushed by A'],
-        [tenantB, 'flushed by B'],
-      ]);
+    let interceptor: TenantContextInterceptor;
 
-      for (const [tenantId, name] of names) {
-        await tenantContext.run(tenantId, async () => {
-          const em = db.orm.em.fork();
-          em.create(Store, {
-            tenant: tenantId,
-            name,
-            location: at(30.5, 50.4),
-          });
-          await em.flush();
-        });
+    class ProbeController {}
+    function probe(): void {}
+
+    class StoreProbe {
+      @Transactional()
+      async tenantsSeen(): Promise<string[]> {
+        const rows = await db.orm.em
+          .getKysely<DB>()
+          .selectFrom('stores')
+          .select('tenant_id')
+          .distinct()
+          .execute();
+        return rows.map((row) => row.tenant_id);
       }
+    }
 
-      const owner = db.ownerOrm.em.fork();
-      const saved = await owner.find(
-        Store,
-        { name: { $in: [...names.values()] } },
-        { orderBy: { name: 'asc' } },
-      );
-      expect(
-        saved.map((store) => ({ tenant: store.tenant.id, name: store.name })),
-      ).toEqual([
-        { tenant: tenantA, name: 'flushed by A' },
-        { tenant: tenantB, name: 'flushed by B' },
-      ]);
+    beforeAll(async () => {
+      const moduleRef = await Test.createTestingModule({
+        providers: [
+          TenantContextInterceptor,
+          { provide: EntityManager, useValue: db.orm.em },
+        ],
+      }).compile();
+      interceptor = moduleRef.get(TenantContextInterceptor);
     });
 
-    it('RLS-3: the tenant does not outlive its transaction on the same connection', async () => {
-      const [inside] = await inTenant(db.orm, tenantA, (em) =>
-        em.execute<{ pid: number }[]>('select pg_backend_pid() as pid'),
+    function asRequest<T>(
+      tenantId: string,
+      work: () => Promise<T>,
+    ): Promise<T> {
+      const request = requestWith({});
+      request.tenantId = tenantId;
+      const context = contextFor(ProbeController, probe, request);
+      return RequestContext.create(db.orm.em, async () => {
+        const result = await interceptor.intercept(context, {
+          handle: () => defer(work),
+        });
+        return lastValueFrom(result as Observable<T>);
+      });
+    }
+
+    it('RLS-3: a single ORM query outside a transaction sees only the request tenant, request after request', async () => {
+      const seen: Record<string, string[]> = {};
+      for (const tenantId of [tenantA, tenantB]) {
+        const stores = await asRequest(tenantId, () =>
+          db.orm.em.find(Store, {}),
+        );
+        seen[tenantId] = [...new Set(stores.map((store) => store.tenant.id))];
+      }
+
+      expect(seen).toEqual({ [tenantA]: [tenantA], [tenantB]: [tenantB] });
+    });
+
+    it('RLS-3: a flush in a request writes as the request tenant', async () => {
+      const name = 'flushed in a request of A';
+
+      await asRequest(tenantA, async () => {
+        const em = db.orm.em;
+        const tenant = await em.findOneOrFail(Tenant, tenantA);
+        em.create(Store, { tenant, name, location: at(30.5, 50.4) });
+        await em.flush();
+      });
+
+      const saved = await db.ownerOrm.em.fork().find(Store, { name });
+      expect(
+        saved.map((store) => ({ tenant: store.tenant.id, name: store.name })),
+      ).toEqual([{ tenant: tenantA, name }]);
+    });
+
+    it('RLS-3: a @Transactional() method in a request sees only the request tenant', async () => {
+      const seen = await asRequest(tenantB, () =>
+        new StoreProbe().tenantsSeen(),
       );
 
-      const after = await db.orm.em
-        .fork()
-        .execute(
-          'select pg_backend_pid() as pid, (select count(*)::int from stores) as visible',
-        );
+      expect(seen).toEqual([tenantB]);
+    });
 
-      expect(after).toEqual([{ pid: inside?.pid, visible: 0 }]);
+    it('RLS-3: the tenant does not outlive the request transaction on the same connection', async () => {
+      const [inside] = await asRequest(tenantA, () =>
+        db.orm.em.execute<{ pid: number }[]>('select pg_backend_pid() as pid'),
+      );
+
+      const pool = await db.orm.em.getConnection().getNativeClient();
+      const after = await pool.query(
+        'select pg_backend_pid() as pid, (select count(*)::int from stores) as visible',
+      );
+
+      expect(after.rows).toEqual([{ pid: inside?.pid, visible: 0 }]);
     });
   });
 });

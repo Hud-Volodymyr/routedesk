@@ -11,10 +11,11 @@ import {
 import { Order } from '../orders/order.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { Route } from './route.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // One stop on a route. seq is the visiting order across the whole day, starting at 1
 // trip says which load the stop belongs to; a new trip starts after a reload at the depot
-@Entity({ tableName: 'route_stops' })
+@Entity({ tableName: 'route_stops', ...tenantIsolation('tenant_id') })
 @Unique({ properties: ['route', 'order'] })
 @Index({ properties: ['tenant', 'order'] })
 @Check({ name: 'route_stops_seq_check', expression: 'seq >= 1' })

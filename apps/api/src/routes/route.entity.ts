@@ -15,10 +15,11 @@ import { RouteJob } from '../route-jobs/route-job.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { Vehicle } from '../vehicles/vehicle.entity.js';
 import { Zone } from '../zones/zone.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // One vehicle's day for one job: one or more trips, each starting and ending at the depot.
 // Routes never change after the worker writes them.
-@Entity({ tableName: 'routes' })
+@Entity({ tableName: 'routes', ...tenantIsolation('tenant_id') })
 @Unique({ properties: ['job', 'vehicle'] })
 @Index({ properties: ['tenant', 'driver', 'deliveryDate'] })
 @Check({

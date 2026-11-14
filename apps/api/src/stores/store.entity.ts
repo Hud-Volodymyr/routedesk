@@ -10,8 +10,13 @@ import { Tenant } from '../tenants/tenant.entity.js';
 import type { GeoJsonPoint } from '@routedesk/shared';
 import { PointType } from '../common/geo/geography.type.js';
 import { StoreRepository } from './store.repository.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
-@Entity({ tableName: 'stores', repository: () => StoreRepository })
+@Entity({
+  tableName: 'stores',
+  ...tenantIsolation('tenant_id'),
+  repository: () => StoreRepository,
+})
 @Index({ name: 'stores_location_gix', properties: ['location'], type: 'gist' })
 export class Store {
   [EntityRepositoryType]?: StoreRepository;

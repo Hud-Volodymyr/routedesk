@@ -11,10 +11,11 @@ import {
 import { Depot } from '../depots/depot.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { User } from '../users/user.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // One request to plan routes for one depot and date: queued -> running -> done | failed
 // Each depot is planned independently, so dispatchers of different depots never block each other
-@Entity({ tableName: 'route_jobs' })
+@Entity({ tableName: 'route_jobs', ...tenantIsolation('tenant_id') })
 // Only a finished job can be the live plan.
 @Check({
   name: 'route_jobs_current_is_done',

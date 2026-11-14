@@ -8,10 +8,11 @@ import {
 } from '@mikro-orm/decorators/legacy';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { User } from '../users/user.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // 1:1 extension of User for people who drive. Its primary key IS the user's ID, so a
 // driver can't exist without a user, and a user has at most one driver row.
-@Entity({ tableName: 'drivers' })
+@Entity({ tableName: 'drivers', ...tenantIsolation('tenant_id') })
 export class Driver {
   [PrimaryKeyProp]?: 'user';
 

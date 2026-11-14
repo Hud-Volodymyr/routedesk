@@ -9,7 +9,6 @@ const CONFIGS = [
   'vitest.config.int.ts',
   'vitest.config.e2e.ts',
 ];
-const IGNORED_FILES = new Set(['database.int-spec.ts']);
 const REQUIREMENT = /^- \*\*([A-Z]+-\d+)\*\*/gm;
 const TITLE_ID = /^([A-Z]+-\d+): /;
 
@@ -35,7 +34,7 @@ function listedTests(): ListedTest[] {
       { cwd: API_ROOT, encoding: 'utf8' },
     );
     return JSON.parse(out) as ListedTest[];
-  }).filter((test) => !IGNORED_FILES.has(basename(test.file)));
+  });
 }
 
 const ids = requirementIds();
