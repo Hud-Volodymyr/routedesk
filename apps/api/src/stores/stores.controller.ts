@@ -1,4 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator.js';
 import { TenantId } from '../auth/tenant-id.decorator.js';
 import { ZodValidationPipe } from '../common/validation/zod-validation.pipe.js';
 import {
@@ -15,6 +16,7 @@ import {
 } from './dto/stores-within.query.js';
 import { StoresService } from './stores.service.js';
 
+@Roles('admin', 'dispatcher')
 @Controller('stores')
 export class StoresController {
   constructor(private readonly stores: StoresService) {}

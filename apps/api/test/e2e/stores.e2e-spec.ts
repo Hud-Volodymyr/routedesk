@@ -126,6 +126,39 @@ describe('Stores (e2e)', () => {
     });
   });
 
+  describe('roles', () => {
+    const endpoints: [string, () => [string, string]][] = [
+      ['GET /stores/within', () => [WITHIN_750_M, geoTenantId]],
+      [
+        'GET /stores/nearest',
+        () => [`/stores/nearest?depotId=${geoDepotId}&k=2`, geoTenantId],
+      ],
+      ['GET /stores/:id/zone', () => [`/stores/${centreStoreId}/zone`, kyivId]],
+    ];
+
+    function getAs(endpoint: () => [string, string], groups: string[]) {
+      const [url, tenantId] = endpoint();
+      return request(app.getHttpServer())
+        .get(url)
+        .set(authHeader(tenantId, groups));
+    }
+
+    it.each(endpoints)('ROLE-2: %s allows admin', async (_label, endpoint) => {
+      const response = await getAs(endpoint, ['admin']);
+
+      expect(response.status).toBe(200);
+    });
+
+    it.each(endpoints)(
+      'ROLE-2: %s is 403 for driver',
+      async (_label, endpoint) => {
+        const response = await getAs(endpoint, ['driver']);
+
+        expect(response.status).toBe(403);
+      },
+    );
+  });
+
   describe('GET /stores/within', () => {
     it('GEO-1: converts radiusKm to metres and returns stores with id, name, GeoJSON location and distance', async () => {
       const response = await get(WITHIN_750_M, geoTenantId);
