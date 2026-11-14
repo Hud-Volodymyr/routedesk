@@ -9,9 +9,10 @@ import {
 import { Order } from '../orders/order.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { RouteJob } from './route-job.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // An order a job could not place on any route, and why. The job still ends as 'done'
-@Entity({ tableName: 'route_job_unassigned' })
+@Entity({ tableName: 'route_job_unassigned', ...tenantIsolation('tenant_id') })
 @Check({
   name: 'route_job_unassigned_reason_check',
   expression: `reason in ('no_zone', 'no_vehicle', 'over_capacity')`,

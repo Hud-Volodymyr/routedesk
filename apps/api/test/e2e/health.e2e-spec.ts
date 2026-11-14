@@ -21,7 +21,7 @@ describe('Health (e2e)', () => {
     await db?.stop();
   });
 
-  it('HEALTH-1: GET /health returns 200 with status ok, without X-Tenant-Id', async () => {
+  it('HEALTH-1: GET /health returns 200 with status ok, without an Authorization header', async () => {
     const response = await request(app.getHttpServer()).get('/health');
 
     expect(response.status).toBe(200);

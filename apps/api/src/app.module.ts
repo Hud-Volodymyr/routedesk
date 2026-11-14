@@ -6,6 +6,7 @@ import { NotFoundErrorFilter } from './common/errors/not-found-error.filter.js';
 import { HealthModule } from './health/health.module.js';
 import config from './mikro-orm.config.js';
 import { StoresModule } from './stores/stores.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { StoresModule } from './stores/stores.module.js';
     AuthModule,
     HealthModule,
     StoresModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [{ provide: APP_FILTER, useClass: NotFoundErrorFilter }],

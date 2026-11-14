@@ -166,7 +166,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "drivers",
@@ -298,7 +309,18 @@
           "deleteRule": "cascade"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "orders",
@@ -491,7 +513,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "route_job_unassigned",
@@ -631,7 +664,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "route_jobs",
@@ -924,7 +968,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "route_stops",
@@ -1125,7 +1180,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "routes",
@@ -1405,7 +1471,18 @@
           "referencedTableName": "public.zones"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "stores",
@@ -1569,7 +1646,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "tenants",
@@ -1642,7 +1730,18 @@
       "checks": [],
       "triggers": [],
       "foreignKeys": {},
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "users",
@@ -1805,7 +1904,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "vehicles",
@@ -2039,7 +2149,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     },
     {
       "name": "zones",
@@ -2242,7 +2363,18 @@
           "referencedTableName": "public.tenants"
         }
       },
-      "comment": null
+      "comment": null,
+      "policies": [
+        {
+          "name": "tenant_isolation",
+          "command": "all",
+          "type": "permissive",
+          "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)",
+          "check": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+        }
+      ],
+      "rlsEnabled": true,
+      "rlsForced": true
     }
   ],
   "views": [],

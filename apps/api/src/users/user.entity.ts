@@ -6,10 +6,11 @@ import {
   Property,
 } from '@mikro-orm/decorators/legacy';
 import { Tenant } from '../tenants/tenant.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // Every user of every role. Roles are NOT stored here: Cognito groups are the only
 // source of truth for roles, and the API reads them from the token.
-@Entity({ tableName: 'users' })
+@Entity({ tableName: 'users', ...tenantIsolation('tenant_id') })
 export class User {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id!: Opt<string>;

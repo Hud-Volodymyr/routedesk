@@ -73,7 +73,10 @@ export class DatabaseSeeder extends Seeder {
   }
 
   private seedKyiv(em: EntityManager): void {
-    const tenant = em.create(Tenant, { name: 'Kyiv Distribution' });
+    const tenant = em.create(Tenant, {
+      id: 'a1000000-0000-4000-8000-000000000001',
+      name: 'Kyiv Distribution',
+    });
     createUser(em, tenant, 'kyiv-admin', 'Administrator');
 
     const right = em.create(Depot, {
@@ -184,7 +187,10 @@ export class DatabaseSeeder extends Seeder {
   }
 
   private seedLviv(em: EntityManager): void {
-    const tenant = em.create(Tenant, { name: 'Lviv Supply' });
+    const tenant = em.create(Tenant, {
+      id: 'a1000000-0000-4000-8000-000000000002',
+      name: 'Lviv Supply',
+    });
     createUser(em, tenant, 'lviv-admin', 'Administrator');
     createUser(em, tenant, 'lviv-dispatcher', 'Dispatcher');
 

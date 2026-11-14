@@ -21,7 +21,10 @@ if (existsSync(envFile)) {
 }
 
 export default defineConfig({
-  clientUrl: process.env.DATABASE_URL,
+  clientUrl:
+    process.env.DB_ROLE === 'owner'
+      ? process.env.DATABASE_OWNER_URL
+      : process.env.DATABASE_URL,
   driver: PostgreSqlDriver,
   entities: [
     Tenant,

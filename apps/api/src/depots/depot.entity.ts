@@ -10,9 +10,14 @@ import {
 import { PointType } from '../common/geo/geography.type.js';
 import { Tenant } from '../tenants/tenant.entity.js';
 import { DepotRepository } from './depot.repository.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
 // A warehouse vehicles start from, reload at and return to. Zones and vehicles belong to a depot.
-@Entity({ tableName: 'depots', repository: () => DepotRepository })
+@Entity({
+  tableName: 'depots',
+  ...tenantIsolation('tenant_id'),
+  repository: () => DepotRepository,
+})
 @Index({ name: 'depots_location_gix', properties: ['location'], type: 'gist' })
 export class Depot {
   [EntityRepositoryType]?: DepotRepository;

@@ -23,7 +23,7 @@ describe('Generated Kysely types (integration)', () => {
   beforeAll(async () => {
     db = await startTestDatabase();
 
-    const rows = await db.orm.em.fork().execute<{ column: string }[]>(
+    const rows = await db.ownerOrm.em.fork().execute<{ column: string }[]>(
       `select table_name || '.' || column_name as column
        from information_schema.columns
        where table_schema = 'public' and udt_name = 'geography'`,
@@ -64,5 +64,13 @@ describe('Generated Kysely types (integration)', () => {
     for (const column of Object.keys(overrides)) {
       expect(geographyColumns).toContain(column);
     }
+  });
+
+  it('TYPES-4: generating a migration from the entities against the migrated schema produces no changes', async () => {
+    const diff = await db.ownerOrm.schema.getUpdateSchemaMigrationSQL({
+      wrap: false,
+    });
+
+    expect(diff).toEqual({ up: '', down: '' });
   });
 });

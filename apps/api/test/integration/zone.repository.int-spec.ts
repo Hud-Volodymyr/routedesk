@@ -3,6 +3,7 @@ import { Depot } from '../../src/depots/depot.entity.js';
 import { Tenant } from '../../src/tenants/tenant.entity.js';
 import { Zone } from '../../src/zones/zone.entity.js';
 import {
+  inTenant,
   startTestDatabase,
   type TestDatabase,
 } from '../helpers/test-database.js';
@@ -48,7 +49,7 @@ describe('ZoneRepository (integration)', () => {
   beforeAll(async () => {
     db = await startTestDatabase();
 
-    const em = db.orm.em.fork();
+    const em = db.ownerOrm.em.fork();
     const kyiv = await em.findOneOrFail(Tenant, { name: 'Kyiv Distribution' });
     const sviatoshyn = await em.findOneOrFail(Depot, {
       tenant: kyiv,
@@ -142,15 +143,14 @@ describe('ZoneRepository (integration)', () => {
     await db?.stop();
   });
 
-  function zones() {
-    return db.orm.em.fork().getRepository(Zone);
+  function findCovering(tenantId: string, point: GeoJsonPoint) {
+    return inTenant(db.orm, tenantId, (em) =>
+      em.getRepository(Zone).findCovering(tenantId, point),
+    );
   }
 
   it('GEO-3: picks the highest-priority zone where City Centre overlaps Right Bank South, ignoring a higher-priority zone of another tenant', async () => {
-    const zone = await zones().findCovering(
-      kyivId,
-      CENTRE_AND_RIGHT_BANK_SOUTH,
-    );
+    const zone = await findCovering(kyivId, CENTRE_AND_RIGHT_BANK_SOUTH);
 
     expect(zone).toEqual({
       id: kyivZones.get('City Centre')?.id,
@@ -161,7 +161,7 @@ describe('ZoneRepository (integration)', () => {
   });
 
   it('GEO-3: returns the depot that owns the zone', async () => {
-    const zone = await zones().findCovering(kyivId, LEFT_BANK_NORTH_ONLY);
+    const zone = await findCovering(kyivId, LEFT_BANK_NORTH_ONLY);
 
     expect(zone).toEqual({
       id: kyivZones.get('Left Bank North')?.id,
@@ -172,19 +172,17 @@ describe('ZoneRepository (integration)', () => {
   });
 
   it('GEO-3: returns undefined for a point in no zone', async () => {
-    expect(
-      await zones().findCovering(kyivId, BETWEEN_THE_BANKS),
-    ).toBeUndefined();
+    expect(await findCovering(kyivId, BETWEEN_THE_BANKS)).toBeUndefined();
   });
 
   it('GEO-3: breaks a priority tie with the oldest zone, over a lower id', async () => {
-    const zone = await zones().findCovering(tieBreakId, AGE_TIE);
+    const zone = await findCovering(tieBreakId, AGE_TIE);
 
     expect(zone?.name).toBe('older');
   });
 
   it('GEO-3: breaks a priority and age tie with the lowest id', async () => {
-    const zone = await zones().findCovering(tieBreakId, ID_TIE);
+    const zone = await findCovering(tieBreakId, ID_TIE);
 
     expect(zone?.name).toBe('lower id');
   });

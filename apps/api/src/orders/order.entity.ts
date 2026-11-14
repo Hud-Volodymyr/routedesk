@@ -9,8 +9,9 @@ import {
 } from '@mikro-orm/decorators/legacy';
 import { Store } from '../stores/store.entity.js';
 import { Tenant } from '../tenants/tenant.entity.js';
+import { tenantIsolation } from '../common/db/tenant-isolation.js';
 
-@Entity({ tableName: 'orders' })
+@Entity({ tableName: 'orders', ...tenantIsolation('tenant_id') })
 @Index({ properties: ['tenant', 'deliveryDate'] })
 @Index({ properties: ['tenant', 'store'] })
 @Check({ expression: 'size > 0' })
